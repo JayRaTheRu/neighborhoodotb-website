@@ -33,8 +33,16 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
 
+    // 0) If Supabase isn't configured in this environment, fail gracefully.
+    if (!supabase) {
+      setStatus({
+        type: 'error',
+        message: 'Dispatch is not configured in this environment yet.'
+      })
+      return
+    }
+
     // 1) Honeypot: if filled, treat as success but do nothing.
-    // Bots often fill every field; humans won't see this input.
     if (company.trim().length > 0) {
       setStatus({ type: 'success', message: 'You’re in. Watch the next drop.' })
       return
@@ -53,15 +61,13 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
       return
     }
 
-    // 3) Consent: trust + legal hygiene
+    // 3) Consent
     if (!consent) {
       setStatus({ type: 'error', message: 'Please confirm consent to join the Dispatch.' })
       return
     }
 
     setStatus({ type: 'loading' })
-
-    // Start cooldown immediately (even if request fails)
     setCooldownUntil(Date.now() + 12_000)
 
     const payload = {
@@ -84,7 +90,6 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
     const code = (error as any).code
     const msg = (error as any).message as string
 
-    // Unique constraint violation (already subscribed)
     if (code === '23505' || /duplicate key|unique/i.test(msg)) {
       setStatus({ type: 'success', message: 'Already on the list. You’re good.' })
       return
@@ -104,7 +109,6 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
       </div>
 
       <form onSubmit={onSubmit} className="dispatchForm">
-        {/* Honeypot field: hidden from humans, attractive to bots */}
         <div className="hp" aria-hidden="true">
           <label>
             Company
@@ -142,11 +146,7 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
         </label>
 
         <label className="check">
-          <input
-            type="checkbox"
-            checked={consent}
-            onChange={(e) => setConsent(e.target.checked)}
-          />
+          <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
           <span>I agree to receive The Neighborhood Dispatch emails.</span>
         </label>
 

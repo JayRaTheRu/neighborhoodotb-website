@@ -1,13 +1,16 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
 
-if (!url || !anonKey) {
-  throw new Error(
-    'Missing Supabase env vars. Ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY exist in .env.local and restart dev server.'
-  )
+let supabase: SupabaseClient | null = null
+
+if (supabaseUrl && supabaseAnonKey) {
+  supabase = createClient(supabaseUrl, supabaseAnonKey)
 }
 
-// Browser-safe client (anon key + RLS)
-export const supabase = createClient(url, anonKey)
+export { supabase }
+
+export function isSupabaseConfigured() {
+  return Boolean(supabaseUrl && supabaseAnonKey)
+}

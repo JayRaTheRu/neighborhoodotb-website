@@ -1,49 +1,41 @@
+import React from 'react'
 import { getAllContentMeta } from '../content/contentIndex'
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 function formatDate(date?: string) {
   if (!date) return ''
-  try {
-    const d = new Date(date)
-    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' })
-  } catch {
-    return date
-  }
-}
-
-function typeKey(meta: { type?: string; series?: string }) {
-  const raw = `${meta.type ?? meta.series ?? ''}`.trim().toLowerCase()
-  if (raw === 'drop' || raw === 'drops') return 'drop'
-  if (raw === 'loop' || raw === 'loops') return 'loop'
-  return raw
-}
-
-function typeLabel(meta: { type?: string; series?: string }) {
-  const key = typeKey(meta)
-  if (!key) return 'Content'
-  return key.charAt(0).toUpperCase() + key.slice(1)
+  // Deterministic formatting for hydration safety: expects YYYY-MM-DD
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date.trim())
+  if (!m) return date
+  const year = m[1]
+  const month = Number(m[2])
+  const day = m[3]
+  const mon = MONTHS[month - 1] ?? m[2]
+  return `${mon} ${day}, ${year}`
 }
 
 export function FeaturedDrop() {
   const items = getAllContentMeta()
-  if (items.length === 0) return null
 
-  const featuredDrop =
-    items.find((x) => x.featured && typeKey(x) === 'drop') ?? items.find((x) => typeKey(x) === 'drop')
+  // Prefer featured drops first, else newest drop, else newest content item
+  const featured =
+    items.find((x) => x.featured && (x.type === 'drop' || x.series === 'Drops')) ||
+    items.find((x) => x.type === 'drop' || x.series === 'Drops') ||
+    items[0]
 
-  const featured = featuredDrop ?? items[0]
-  const isDrop = typeKey(featured) === 'drop'
+  if (!featured) return null
 
   return (
     <section className="homeSection">
       <header className="sectionHeader">
-        <h2>{isDrop ? 'Featured Drop' : 'Featured'}</h2>
-        <p>{isDrop ? 'The newest release with a dedicated, shareable page.' : 'A highlighted piece with a shareable page.'}</p>
+        <h2>Featured Drop</h2>
+        <p>The newest release with a dedicated, shareable page.</p>
       </header>
 
       <a href={`/content/${featured.slug}`} className="featured">
         <div className="featuredMeta">
-          <div className="pill">{typeLabel(featured)}</div>
-          {featured.featured ? <div className="pill">Featured</div> : null}
+          <div className="pill">Drop</div>
           <div className="muted">{formatDate(featured.date)}</div>
         </div>
 
@@ -52,10 +44,8 @@ export function FeaturedDrop() {
         {featured.summary ? <div className="featuredSummary">{featured.summary}</div> : null}
 
         <div className="featuredBottom">
-          <span className="featuredCta">Open</span>
-          <span className="muted">
-            {featured.tags && featured.tags.length > 0 ? featured.tags.slice(0, 3).join(' • ') : ''}
-          </span>
+          <span className="featuredCta">Open drop</span>
+          <span className="muted">{featured.tags?.slice(0, 3).join(' • ')}</span>
         </div>
       </a>
     </section>

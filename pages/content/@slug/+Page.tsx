@@ -1,15 +1,6 @@
 import { usePageContext } from 'vike-react/usePageContext'
 import { getAllContentMeta, getContentBySlug } from '../../../src/content/contentIndex'
-
-function formatDate(date?: string) {
-  if (!date) return ''
-  try {
-    const d = new Date(date)
-    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' })
-  } catch {
-    return date
-  }
-}
+import { formatDateYmd } from '../../../src/lib/formatDate'
 
 function typeKey(meta: { type?: string; series?: string }) {
   const raw = `${meta.type ?? meta.series ?? ''}`.trim().toLowerCase()
@@ -69,7 +60,7 @@ export default function Page() {
         <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
           <span className="pill">{typeLabel(meta)}</span>
           {meta.featured ? <span className="pill">Featured</span> : null}
-          {meta.date ? <span style={{ opacity: 0.7, fontSize: 13 }}>{formatDate(meta.date)}</span> : null}
+          {meta.date ? <span style={{ opacity: 0.7, fontSize: 13 }}>{formatDateYmd(meta.date)}</span> : null}
         </div>
 
         {meta.tags && meta.tags.length > 0 ? (

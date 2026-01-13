@@ -1,15 +1,6 @@
 import { useMemo, useState } from 'react'
 import { getAllContentMeta } from '../../src/content/contentIndex'
-
-function formatDate(date?: string) {
-  if (!date) return ''
-  try {
-    const d = new Date(date)
-    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' })
-  } catch {
-    return date
-  }
-}
+import { formatDateYmd } from '../../src/lib/formatDate'
 
 function typeKey(meta: { type?: string; series?: string }) {
   const raw = `${meta.type ?? meta.series ?? ''}`.trim().toLowerCase()
@@ -173,7 +164,7 @@ export default function Page() {
               <strong style={{ fontSize: 16 }}>{item.title}</strong>
               <span style={{ opacity: 0.7, fontSize: 13 }}>
                 {typeLabel(item)}
-                {item.date ? ` • ${formatDate(item.date)}` : ''}
+                {item.date ? ` • ${formatDateYmd(item.date)}` : ''}
               </span>
             </div>
 

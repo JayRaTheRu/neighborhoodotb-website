@@ -1,4 +1,4 @@
-User-agent: \*
+User-agent: *
 Allow: /
 
-Sitemap: https://neighborhoodotb.io/sitemap.xml
+Sitemap: https://www.neighborhoodotb.io/sitemap.xml

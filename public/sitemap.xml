@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://neighborhoodotb.io/</loc></url>
-  <url><loc>https://neighborhoodotb.io/about</loc></url>
-  <url><loc>https://neighborhoodotb.io/fudkers</loc></url>
-  <url><loc>https://neighborhoodotb.io/studio</loc></url>
-  <url><loc>https://neighborhoodotb.io/collective</loc></url>
-  <url><loc>https://neighborhoodotb.io/store</loc></url>
-  <url><loc>https://neighborhoodotb.io/lab</loc></url>
-  <url><loc>https://neighborhoodotb.io/brand-kit</loc></url>
-  <url><loc>https://neighborhoodotb.io/contact</loc></url>
-
-  <url><loc>https://neighborhoodotb.io/legal/privacy</loc></url>
-  <url><loc>https://neighborhoodotb.io/legal/terms</loc></url>
-
-  <url><loc>https://neighborhoodotb.io/content</loc></url>
-  <url><loc>https://neighborhoodotb.io/content/drop-001</loc></url>
-  <url><loc>https://neighborhoodotb.io/content/drop-002</loc></url>
-  <url><loc>https://neighborhoodotb.io/content/loop-001</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/about</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/fudkers</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/studio</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/collective</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/store</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/lab</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/brand-kit</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/contact</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/legal/privacy</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/legal/terms</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/content</loc></url>
+  <url><loc>https://www.neighborhoodotb.io/content/drop-001</loc><lastmod>2026-01-10</lastmod></url>
+  <url><loc>https://www.neighborhoodotb.io/content/drop-002</loc><lastmod>2026-01-12</lastmod></url>
+  <url><loc>https://www.neighborhoodotb.io/content/loop-001</loc><lastmod>2026-01-11</lastmod></url>
 </urlset>

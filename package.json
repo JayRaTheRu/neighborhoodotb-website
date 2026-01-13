@@ -1,6 +1,7 @@
 {
   "scripts": {
     "dev": "vike dev",
+    "prebuild": "node scripts/generate-sitemap.mjs",
     "build": "vike build",
     "preview": "vike build && vike preview"
   },

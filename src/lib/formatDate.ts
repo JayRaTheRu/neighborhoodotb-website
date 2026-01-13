@@ -19,3 +19,5 @@ export function formatDateYmd(date?: string): string {
   const mon = MONTHS[monthNum - 1] ?? m[2]
   return `${mon} ${day}, ${year}`
 }
+
+export default formatDateYmd

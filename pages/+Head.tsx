@@ -9,38 +9,23 @@ const DEFAULT_DESCRIPTION = 'Culture house + creative studio + tools + drops. Bu
 
 const SITE_ORIGIN = String(import.meta.env.VITE_SITE_ORIGIN ?? '').replace(/\/+$/, '')
 
-/**
- * Env helpers
- * Vite env vars are build-time. On Vercel, env var changes require a redeploy.
- * Also: we support multiple env key names for compatibility (e.g. VITE_CONTACT_EMAIL vs VITE_SITE_CONTACT_EMAIL).
- */
-function getEnvFirst(keys: string[], fallback = ''): string {
+function envFirst(...keys: string[]): string {
   for (const k of keys) {
-    const v = String((import.meta as any).env?.[k] ?? '').trim()
-    if (v) return v
+    const v = (import.meta.env as any)?.[k]
+    if (typeof v === 'string' && v.trim()) return v.trim()
   }
-  return fallback
+  return ''
 }
 
-function parseList(value: string): string[] {
-  // allow comma-separated or newline-separated lists
-  return value
-    .split(/[\n,]/g)
+function splitList(raw: string): string[] {
+  return String(raw || '')
+    .split(/[\n,]+/g) // commas or newlines
     .map((s) => s.trim())
     .filter(Boolean)
 }
 
-function isYmd(s: string | null): s is string {
+function isYmd(s: string | null): boolean {
   return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
-}
-
-function normalizeEmail(email: string | null): string | null {
-  if (!email) return null
-  const e = email.trim()
-  if (!e) return null
-  // Minimal sanity check; don't overvalidate.
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return e
-  return e
 }
 
 function resolveConfigString(value: unknown, pageContext: any): string | null {
@@ -62,20 +47,18 @@ function resolveConfigString(value: unknown, pageContext: any): string | null {
   return null
 }
 
-// Optional AEO/GEO env vars (build-time)
-const SITE_SAME_AS = parseList(
-  getEnvFirst(['VITE_SITE_SAME_AS', 'VITE_SAME_AS', 'VITE_SITE_SOCIALS', 'VITE_SOCIALS'])
-)
+function normalizeAreaServed(values: string[]): string | Array<string | { '@type': 'Country'; name: string }> | undefined {
+  if (!values.length) return undefined
+  if (values.length === 1) return values[0] // cleanest output
 
-const SITE_CONTACT_EMAIL = normalizeEmail(
-  getEnvFirst(['VITE_SITE_CONTACT_EMAIL', 'VITE_CONTACT_EMAIL', 'VITE_SITE_EMAIL', 'VITE_EMAIL']) || null
-)
-
-const SITE_FOUNDING_DATE_RAW =
-  getEnvFirst(['VITE_SITE_FOUNDING_DATE', 'VITE_FOUNDING_DATE', 'VITE_SITE_FOUNDED', 'VITE_FOUNDED']) || null
-const SITE_FOUNDING_DATE = isYmd(SITE_FOUNDING_DATE_RAW) ? SITE_FOUNDING_DATE_RAW : null
-
-const SITE_AREA_SERVED = parseList(getEnvFirst(['VITE_SITE_AREA_SERVED', 'VITE_AREA_SERVED']))
+  return values.map((v) => {
+    const k = v.toLowerCase()
+    if (k === 'us' || k === 'usa' || k === 'united states' || k === 'united states of america') {
+      return { '@type': 'Country' as const, name: 'United States' }
+    }
+    return v
+  })
+}
 
 export function Head() {
   const pageContext = usePageContext()
@@ -88,14 +71,42 @@ export function Head() {
   const description =
     resolveConfigString(pageContext.config?.description, pageContext) ?? DEFAULT_DESCRIPTION
 
+  // Assets (prefer absolute URLs for crawlers)
   const ogImage = origin ? `${origin}/og-default.png` : '/og-default.png'
   const logo512 = origin ? `${origin}/icon-512.png` : '/icon-512.png'
   const contactUrl = origin ? `${origin}/contact` : '/contact'
 
+  // Optional AEO/GEO env vars (strings in Vercel; parsed here)
+  const sameAs = splitList(envFirst('VITE_SITE_SAME_AS', 'VITE_SAME_AS'))
+  const contactEmail = envFirst('VITE_SITE_CONTACT_EMAIL', 'VITE_CONTACT_EMAIL') || null
+
+  const foundingDateRaw = envFirst('VITE_SITE_FOUNDING_DATE', 'VITE_FOUNDING_DATE')
+  const foundingDate = isYmd(foundingDateRaw) ? foundingDateRaw : null
+
+  const areaServedRaw = envFirst('VITE_SITE_AREA_SERVED', 'VITE_AREA_SERVED')
+  const areaServedList = splitList(areaServedRaw)
+  const areaServed = normalizeAreaServed(areaServedList)
+
+  // GEO grounding (based in LA)
+  const addressLocality = envFirst('VITE_SITE_ADDRESS_LOCALITY', 'VITE_ADDRESS_LOCALITY') || null
+  const addressRegion = envFirst('VITE_SITE_ADDRESS_REGION', 'VITE_ADDRESS_REGION') || null
+  const addressCountry = envFirst('VITE_SITE_ADDRESS_COUNTRY', 'VITE_ADDRESS_COUNTRY') || null
+  const postalCode = envFirst('VITE_SITE_ADDRESS_POSTAL_CODE', 'VITE_ADDRESS_POSTAL_CODE') || null
+
+  const hasAddress = Boolean(addressLocality || addressRegion || addressCountry || postalCode)
+  const postalAddress = hasAddress
+    ? {
+        '@type': 'PostalAddress',
+        ...(addressLocality ? { addressLocality } : null),
+        ...(addressRegion ? { addressRegion } : null),
+        ...(addressCountry ? { addressCountry } : null),
+        ...(postalCode ? { postalCode } : null)
+      }
+    : null
+
   const orgId = origin ? `${origin}/#organization` : null
   const siteId = origin ? `${origin}/#website` : null
 
-  // Organization JSON-LD (AEO/GEO)
   const organizationJsonLd =
     origin && orgId
       ? {
@@ -106,32 +117,30 @@ export function Head() {
           name: SITE_NAME,
           alternateName: SITE_APP_NAME,
           description: DEFAULT_DESCRIPTION,
-
           url: origin,
+
           logo: {
             '@type': 'ImageObject',
             url: logo512
           },
 
-          // Optional enrichments
-          sameAs: SITE_SAME_AS.length ? SITE_SAME_AS : undefined,
-          foundingDate: SITE_FOUNDING_DATE ?? undefined,
-          areaServed: SITE_AREA_SERVED.length ? SITE_AREA_SERVED : undefined,
+          ...(sameAs.length ? { sameAs } : null),
+          ...(foundingDate ? { foundingDate } : null),
+          ...(areaServed ? { areaServed } : null),
+          ...(postalAddress ? { address: postalAddress } : null),
 
-          // Contact clarity
           contactPoint: [
             {
               '@type': 'ContactPoint',
               contactType: 'inquiries',
               url: contactUrl,
-              email: SITE_CONTACT_EMAIL ?? undefined,
+              ...(contactEmail ? { email: contactEmail } : null),
               availableLanguage: ['en']
             }
           ]
         }
       : null
 
-  // WebSite JSON-LD
   const websiteJsonLd =
     origin && siteId
       ? {
@@ -141,7 +150,6 @@ export function Head() {
 
           name: SITE_NAME,
           alternateName: SITE_APP_NAME,
-
           url: origin,
           description: DEFAULT_DESCRIPTION,
           inLanguage: 'en-US',
@@ -155,6 +163,12 @@ export function Head() {
       {/* Primary document metadata */}
       <title>{title}</title>
       <meta name="description" content={description} />
+      <meta name="application-name" content={SITE_APP_NAME} />
+      <meta name="theme-color" content="#0b0b0b" />
+      <meta name="robots" content="index, follow" />
+
+      {/* Canonical */}
+      {canonical ? <link rel="canonical" href={canonical} /> : null}
 
       {/* Icons + manifest */}
       <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -163,15 +177,7 @@ export function Head() {
       <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
       <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
 
-      {/* Basics */}
-      <meta name="theme-color" content="#0b0b0b" />
-      <meta name="robots" content="index, follow" />
-      <meta name="application-name" content={SITE_APP_NAME} />
-
-      {/* Canonical */}
-      {canonical ? <link rel="canonical" href={canonical} /> : null}
-
-      {/* Open Graph defaults */}
+      {/* Open Graph */}
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:locale" content="en_US" />
@@ -184,7 +190,7 @@ export function Head() {
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={SITE_NAME} />
 
-      {/* Twitter defaults */}
+      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
@@ -193,10 +199,16 @@ export function Head() {
 
       {/* Structured data */}
       {organizationJsonLd ? (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
       ) : null}
       {websiteJsonLd ? (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
       ) : null}
     </>
   )

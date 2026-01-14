@@ -13,6 +13,8 @@ export function Head() {
 
   const origin = SITE_ORIGIN || pageContext.urlParsed?.origin || ''
   const canonical = origin ? `${origin}/content/${slug}` : null
+  const ogImage = origin ? `${origin}/og-default.png` : '/og-default.png'
+  const orgId = origin ? `${origin}/#organization` : null
 
   const entry = getContentBySlug(slug)
   if (!entry) {
@@ -21,7 +23,7 @@ export function Head() {
 
   const { meta } = entry
 
-  const jsonLd = {
+  const jsonLd: any = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: meta.title,
@@ -29,8 +31,16 @@ export function Head() {
     datePublished: meta.date ?? undefined,
     dateModified: meta.date ?? undefined,
     keywords: meta.tags?.join(', ') ?? undefined,
-    mainEntityOfPage: canonical ?? undefined,
-    publisher: { '@type': 'Organization', name: SITE_NAME }
+    image: ogImage,
+    mainEntityOfPage: canonical
+      ? {
+          '@type': 'WebPage',
+          '@id': canonical
+        }
+      : undefined,
+    publisher: orgId
+      ? { '@type': 'Organization', '@id': orgId, name: SITE_NAME }
+      : { '@type': 'Organization', name: SITE_NAME }
   }
 
   return (

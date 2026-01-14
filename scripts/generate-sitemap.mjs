@@ -42,8 +42,12 @@ function extractMetaValue(src, key) {
   return m ? m[1] : null
 }
 
+function isYmd(s) {
+  return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
+}
+
 function urlEntry(loc, lastmod = null) {
-  if (lastmod) {
+  if (lastmod && isYmd(lastmod)) {
     return `  <url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`
   }
   return `  <url><loc>${loc}</loc></url>`
@@ -52,14 +56,17 @@ function urlEntry(loc, lastmod = null) {
 function main() {
   if (!fs.existsSync(PUBLIC_DIR)) fs.mkdirSync(PUBLIC_DIR, { recursive: true })
 
+  // Build-time lastmod for static routes (YYYY-MM-DD)
+  const buildDate = new Date().toISOString().slice(0, 10)
+
   const urls = []
 
-  // Static pages
+  // Static pages (use buildDate as lastmod)
   for (const r of STATIC_ROUTES) {
-    urls.push(urlEntry(`${ORIGIN}${r}`))
+    urls.push(urlEntry(`${ORIGIN}${r}`, buildDate))
   }
 
-  // Content pages from MDX meta exports
+  // Content pages from MDX meta exports (use meta date when present/valid)
   if (fs.existsSync(CONTENT_DIR)) {
     const mdxFiles = walk(CONTENT_DIR).filter((f) => f.toLowerCase().endsWith('.mdx'))
 
@@ -69,7 +76,7 @@ function main() {
       if (!slug) continue
 
       const date = extractMetaValue(src, 'date') // expected YYYY-MM-DD
-      const lastmod = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null
+      const lastmod = isYmd(date) ? date : null
 
       urls.push(urlEntry(`${ORIGIN}/content/${slug}`, lastmod))
     }

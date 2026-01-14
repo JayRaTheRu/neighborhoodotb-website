@@ -5,16 +5,16 @@ import { usePageContext } from 'vike-react/usePageContext'
 import { getContentBySlug } from '../../../src/content/contentIndex'
 
 const SITE_NAME = 'The Neighborhood On The Block'
-const SITE_ORIGIN = import.meta.env.VITE_SITE_ORIGIN ?? ''
+const SITE_ORIGIN = String(import.meta.env.VITE_SITE_ORIGIN ?? '').replace(/\/+$/, '')
 
 export function Head() {
   const pageContext = usePageContext()
   const slug = String(pageContext.routeParams?.slug ?? '').trim()
-  const entry = getContentBySlug(slug)
 
   const origin = SITE_ORIGIN || pageContext.urlParsed?.origin || ''
   const canonical = origin ? `${origin}/content/${slug}` : null
 
+  const entry = getContentBySlug(slug)
   if (!entry) {
     return canonical ? <link rel="canonical" href={canonical} /> : null
   }
@@ -30,10 +30,7 @@ export function Head() {
     dateModified: meta.date ?? undefined,
     keywords: meta.tags?.join(', ') ?? undefined,
     mainEntityOfPage: canonical ?? undefined,
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_NAME
-    }
+    publisher: { '@type': 'Organization', name: SITE_NAME }
   }
 
   return (
@@ -42,18 +39,9 @@ export function Head() {
       {canonical ? <meta property="og:url" content={canonical} /> : null}
 
       <meta property="og:type" content="article" />
-      <meta property="og:site_name" content={SITE_NAME} />
-
-      <meta name="twitter:card" content="summary" />
-      <meta name="twitter:title" content={meta.title} />
-      {meta.summary ? <meta name="twitter:description" content={meta.summary} /> : null}
-
       {meta.date ? <meta property="article:published_time" content={meta.date} /> : null}
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     </>
   )
 }

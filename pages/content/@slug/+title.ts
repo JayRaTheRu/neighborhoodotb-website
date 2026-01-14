@@ -1,12 +1,9 @@
-export { title }
-
-import type { PageContext } from 'vike/types'
 import { getContentBySlug } from '../../../src/content/contentIndex'
 
-function title(pageContext: PageContext): string {
-  const slug = String(pageContext.routeParams?.slug ?? '')
-  const entry = getContentBySlug(slug)
+const SITE_NAME = 'The Neighborhood On The Block'
 
-  if (!entry) return 'Content — The Neighborhood On The Block'
-  return `${entry.meta.title} — The Neighborhood On The Block`
+export default function title(pageContext: any): string {
+  const slug = String(pageContext.routeParams?.slug ?? '').trim()
+  const entry = getContentBySlug(slug)
+  return entry?.meta?.title ? `${entry.meta.title}` : `Content — ${SITE_NAME}`
 }

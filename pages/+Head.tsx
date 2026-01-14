@@ -8,15 +8,6 @@ const DEFAULT_DESCRIPTION = 'Culture house + creative studio + tools + drops. Bu
 
 const SITE_ORIGIN = String(import.meta.env.VITE_SITE_ORIGIN ?? '').replace(/\/+$/, '')
 
-const faviconSvg = encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0b0b0b"/>
-  <text x="50%" y="52%" text-anchor="middle" dominant-baseline="middle"
-        font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial"
-        font-size="26" font-weight="700" fill="#ffffff">OTB</text>
-</svg>
-`.trim())
-
 function resolveConfigString(value: unknown, pageContext: any): string | null {
   try {
     if (typeof value === 'string') {
@@ -47,14 +38,21 @@ export function Head() {
   const description =
     resolveConfigString(pageContext.config?.description, pageContext) ?? DEFAULT_DESCRIPTION
 
+  // Absolute OG image URL when possible (preferred by crawlers)
   const ogImage = origin ? `${origin}/og-default.png` : '/og-default.png'
 
   return (
     <>
+      {/* Primary document metadata */}
+      <title>{title}</title>
+      <meta name="description" content={description} />
+
       {/* Icons + manifest */}
-      <link rel="icon" href={`data:image/svg+xml,${faviconSvg}`} />
-      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      <link rel="icon" href="/favicon.ico" sizes="any" />
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
       <link rel="manifest" href="/site.webmanifest" />
+
+      {/* Optional explicit PWA icons (harmless; some clients use them) */}
       <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
       <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
 
@@ -66,6 +64,7 @@ export function Head() {
       {canonical ? <link rel="canonical" href={canonical} /> : null}
 
       {/* Open Graph defaults */}
+      <meta property="og:type" content="website" />
       <meta property="og:site_name" content={SITE_NAME} />
       {canonical ? <meta property="og:url" content={canonical} /> : null}
       <meta property="og:title" content={title} />
@@ -73,12 +72,14 @@ export function Head() {
       <meta property="og:image" content={ogImage} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={SITE_NAME} />
 
       {/* Twitter defaults */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
+      <meta name="twitter:image:alt" content={SITE_NAME} />
     </>
   )
 }

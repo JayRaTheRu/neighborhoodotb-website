@@ -1,0 +1,1 @@
+export default 'Collective — NeighborhoodOTB'

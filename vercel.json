@@ -1,12 +1,4 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/client",
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "neighborhoodotb.io" }],
-      "destination": "https://www.neighborhoodotb.io/$1",
-      "permanent": true
-    }
-  ]
+  "outputDirectory": "dist/client"
 }

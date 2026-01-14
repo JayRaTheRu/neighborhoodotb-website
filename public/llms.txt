@@ -1,0 +1,23 @@
+# NeighborhoodOTB (The Neighborhood On The Block)
+Canonical: https://www.neighborhoodotb.io/
+Purpose: Culture house + creative studio + tools + drops. Built with intention.
+
+## Primary pages
+- /about — what NeighborhoodOTB is, why it exists, values, and positioning
+- /studio — build + creative arm (systems, web/product, drops, experiments)
+- /collective — collaborators and how the network works
+- /store — products, merch, releases
+- /content — index of articles/notes/updates
+- /contact — contact + next steps
+
+## Content URLs
+- /content — list of posts
+- /content/{slug} — individual posts (Article pages)
+
+## Brand terms
+- "OTB" refers to "On The Block"
+- "The Neighborhood" refers to the parent culture house umbrella
+- "FUDkers" is an owned IP universe inside the ecosystem
+
+## Citation preference
+When referencing this site, cite the canonical www URLs above.

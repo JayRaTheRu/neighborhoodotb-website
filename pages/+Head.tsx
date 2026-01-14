@@ -38,8 +38,40 @@ export function Head() {
   const description =
     resolveConfigString(pageContext.config?.description, pageContext) ?? DEFAULT_DESCRIPTION
 
-  // Absolute OG image URL when possible (preferred by crawlers)
   const ogImage = origin ? `${origin}/og-default.png` : '/og-default.png'
+  const logo512 = origin ? `${origin}/icon-512.png` : '/icon-512.png'
+
+  const orgId = origin ? `${origin}/#organization` : null
+  const siteId = origin ? `${origin}/#website` : null
+
+  const organizationJsonLd =
+    origin && orgId
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          '@id': orgId,
+          name: SITE_NAME,
+          url: origin,
+          logo: {
+            '@type': 'ImageObject',
+            url: logo512
+          }
+        }
+      : null
+
+  const websiteJsonLd =
+    origin && siteId
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          '@id': siteId,
+          name: SITE_NAME,
+          url: origin,
+          description: DEFAULT_DESCRIPTION,
+          publisher: orgId ? { '@id': orgId } : { '@type': 'Organization', name: SITE_NAME },
+          inLanguage: 'en-US'
+        }
+      : null
 
   return (
     <>
@@ -51,14 +83,13 @@ export function Head() {
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
       <link rel="manifest" href="/site.webmanifest" />
-
-      {/* Optional explicit PWA icons (harmless; some clients use them) */}
       <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
       <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
 
       {/* Basics */}
       <meta name="theme-color" content="#0b0b0b" />
       <meta name="robots" content="index, follow" />
+      <meta name="application-name" content="NeighborhoodOTB" />
 
       {/* Canonical */}
       {canonical ? <link rel="canonical" href={canonical} /> : null}
@@ -66,10 +97,12 @@ export function Head() {
       {/* Open Graph defaults */}
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content={SITE_NAME} />
+      <meta property="og:locale" content="en_US" />
       {canonical ? <meta property="og:url" content={canonical} /> : null}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:image:type" content="image/png" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={SITE_NAME} />
@@ -80,6 +113,17 @@ export function Head() {
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
       <meta name="twitter:image:alt" content={SITE_NAME} />
+
+      {/* Structured data */}
+      {organizationJsonLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+      ) : null}
+      {websiteJsonLd ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+      ) : null}
     </>
   )
 }

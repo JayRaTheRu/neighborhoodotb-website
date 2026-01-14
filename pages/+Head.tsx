@@ -4,9 +4,24 @@
 import { usePageContext } from 'vike-react/usePageContext'
 
 const SITE_NAME = 'The Neighborhood On The Block'
+const SITE_APP_NAME = 'NeighborhoodOTB'
 const DEFAULT_DESCRIPTION = 'Culture house + creative studio + tools + drops. Built with intention.'
 
 const SITE_ORIGIN = String(import.meta.env.VITE_SITE_ORIGIN ?? '').replace(/\/+$/, '')
+
+// Optional AEO/GEO env vars (build-time)
+const SITE_SAME_AS = String(import.meta.env.VITE_SITE_SAME_AS ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
+
+const SITE_CONTACT_EMAIL = String(import.meta.env.VITE_SITE_CONTACT_EMAIL ?? '').trim() || null
+const SITE_FOUNDING_DATE = String(import.meta.env.VITE_SITE_FOUNDING_DATE ?? '').trim() || null
+
+const SITE_AREA_SERVED = String(import.meta.env.VITE_SITE_AREA_SERVED ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
 
 function resolveConfigString(value: unknown, pageContext: any): string | null {
   try {
@@ -44,6 +59,8 @@ export function Head() {
   const orgId = origin ? `${origin}/#organization` : null
   const siteId = origin ? `${origin}/#website` : null
 
+  const contactUrl = origin ? `${origin}/contact` : '/contact'
+
   const organizationJsonLd =
     origin && orgId
       ? {
@@ -55,7 +72,20 @@ export function Head() {
           logo: {
             '@type': 'ImageObject',
             url: logo512
-          }
+          },
+
+          // AEO/GEO upgrades (all optional)
+          sameAs: SITE_SAME_AS.length ? SITE_SAME_AS : undefined,
+          foundingDate: SITE_FOUNDING_DATE || undefined,
+          areaServed: SITE_AREA_SERVED.length ? SITE_AREA_SERVED : undefined,
+          contactPoint: [
+            {
+              '@type': 'ContactPoint',
+              contactType: 'inquiries',
+              url: contactUrl,
+              email: SITE_CONTACT_EMAIL || undefined
+            }
+          ]
         }
       : null
 
@@ -89,7 +119,7 @@ export function Head() {
       {/* Basics */}
       <meta name="theme-color" content="#0b0b0b" />
       <meta name="robots" content="index, follow" />
-      <meta name="application-name" content="NeighborhoodOTB" />
+      <meta name="application-name" content={SITE_APP_NAME} />
 
       {/* Canonical */}
       {canonical ? <link rel="canonical" href={canonical} /> : null}
@@ -122,7 +152,10 @@ export function Head() {
         />
       ) : null}
       {websiteJsonLd ? (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
       ) : null}
     </>
   )

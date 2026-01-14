@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { execFileSync } from 'node:child_process'
 
 const ROOT = process.cwd()
 const ORIGIN = (process.env.VITE_SITE_ORIGIN || 'https://www.neighborhoodotb.io').replace(/\/+$/, '')
@@ -46,6 +47,35 @@ function isYmd(s) {
   return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
 }
 
+function maxYmd(a, b) {
+  if (!isYmd(a)) return isYmd(b) ? b : null
+  if (!isYmd(b)) return a
+  return a >= b ? a : b
+}
+
+function mtimeYmd(absPath) {
+  try {
+    const st = fs.statSync(absPath)
+    return new Date(st.mtimeMs).toISOString().slice(0, 10)
+  } catch {
+    return null
+  }
+}
+
+function gitLastModifiedYmd(relPathFromRoot) {
+  // returns YYYY-MM-DD (via %cs) or null if unavailable
+  try {
+    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', relPathFromRoot], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore']
+    }).trim()
+    return isYmd(out) ? out : null
+  } catch {
+    return null
+  }
+}
+
 function urlEntry(loc, lastmod = null) {
   if (lastmod && isYmd(lastmod)) {
     return `  <url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`
@@ -53,20 +83,60 @@ function urlEntry(loc, lastmod = null) {
   return `  <url><loc>${loc}</loc></url>`
 }
 
+function routeToPageDir(route) {
+  if (route === '/') return 'pages/index'
+  // routes map directly to folders in your repo (e.g. /brand-kit -> pages/brand-kit)
+  return path.posix.join('pages', route.replace(/^\//, ''))
+}
+
+function staticRouteLastmod(route) {
+  const pageDir = routeToPageDir(route)
+
+  // Consider all metadata-affecting files for that route
+  const relCandidates = [
+    path.posix.join(pageDir, '+Page.tsx'),
+    path.posix.join(pageDir, '+title.ts'),
+    path.posix.join(pageDir, '+description.ts'),
+    path.posix.join(pageDir, '+Head.tsx'),
+    path.posix.join(pageDir, '+config.ts')
+  ]
+
+  let best = null
+
+  for (const rel of relCandidates) {
+    const abs = path.join(ROOT, rel)
+    if (!fs.existsSync(abs)) continue
+
+    const gitDate = gitLastModifiedYmd(rel)
+    const fileDate = mtimeYmd(abs)
+    best = maxYmd(best, gitDate ?? fileDate)
+  }
+
+  return best
+}
+
+function contentLastmod(absFilePath, metaDate) {
+  const rel = path.relative(ROOT, absFilePath).split(path.sep).join(path.posix.sep)
+
+  const gitDate = gitLastModifiedYmd(rel)
+  const fileDate = mtimeYmd(absFilePath)
+
+  // Ensure lastmod is never earlier than meta "date" (publish date)
+  return maxYmd(metaDate, gitDate ?? fileDate)
+}
+
 function main() {
   if (!fs.existsSync(PUBLIC_DIR)) fs.mkdirSync(PUBLIC_DIR, { recursive: true })
 
-  // Build-time lastmod for static routes (YYYY-MM-DD)
-  const buildDate = new Date().toISOString().slice(0, 10)
-
   const urls = []
 
-  // Static pages (use buildDate as lastmod)
+  // Static pages: lastmod = last Git modification date of page files (fallback to mtime)
   for (const r of STATIC_ROUTES) {
-    urls.push(urlEntry(`${ORIGIN}${r}`, buildDate))
+    const lm = staticRouteLastmod(r)
+    urls.push(urlEntry(`${ORIGIN}${r}`, lm))
   }
 
-  // Content pages from MDX meta exports (use meta date when present/valid)
+  // Content pages: lastmod = max(meta date, git last modified, mtime fallback)
   if (fs.existsSync(CONTENT_DIR)) {
     const mdxFiles = walk(CONTENT_DIR).filter((f) => f.toLowerCase().endsWith('.mdx'))
 
@@ -75,10 +145,10 @@ function main() {
       const slug = extractMetaValue(src, 'slug')
       if (!slug) continue
 
-      const date = extractMetaValue(src, 'date') // expected YYYY-MM-DD
-      const lastmod = isYmd(date) ? date : null
+      const metaDate = extractMetaValue(src, 'date') // expected YYYY-MM-DD (publish date)
+      const lm = contentLastmod(file, isYmd(metaDate) ? metaDate : null)
 
-      urls.push(urlEntry(`${ORIGIN}/content/${slug}`, lastmod))
+      urls.push(urlEntry(`${ORIGIN}/content/${slug}`, lm))
     }
   }
 

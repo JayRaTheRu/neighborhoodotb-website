@@ -9,19 +9,39 @@ const DEFAULT_DESCRIPTION = 'Culture house + creative studio + tools + drops. Bu
 
 const SITE_ORIGIN = String(import.meta.env.VITE_SITE_ORIGIN ?? '').replace(/\/+$/, '')
 
-// Optional AEO/GEO env vars (build-time)
-const SITE_SAME_AS = String(import.meta.env.VITE_SITE_SAME_AS ?? '')
-  .split(',')
-  .map((s) => s.trim())
-  .filter(Boolean)
+/**
+ * Env helpers
+ * Vite env vars are build-time. On Vercel, env var changes require a redeploy.
+ * Also: we support multiple env key names for compatibility (e.g. VITE_CONTACT_EMAIL vs VITE_SITE_CONTACT_EMAIL).
+ */
+function getEnvFirst(keys: string[], fallback = ''): string {
+  for (const k of keys) {
+    const v = String((import.meta as any).env?.[k] ?? '').trim()
+    if (v) return v
+  }
+  return fallback
+}
 
-const SITE_CONTACT_EMAIL = String(import.meta.env.VITE_SITE_CONTACT_EMAIL ?? '').trim() || null
-const SITE_FOUNDING_DATE = String(import.meta.env.VITE_SITE_FOUNDING_DATE ?? '').trim() || null
+function parseList(value: string): string[] {
+  // allow comma-separated or newline-separated lists
+  return value
+    .split(/[\n,]/g)
+    .map((s) => s.trim())
+    .filter(Boolean)
+}
 
-const SITE_AREA_SERVED = String(import.meta.env.VITE_SITE_AREA_SERVED ?? '')
-  .split(',')
-  .map((s) => s.trim())
-  .filter(Boolean)
+function isYmd(s: string | null): s is string {
+  return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s)
+}
+
+function normalizeEmail(email: string | null): string | null {
+  if (!email) return null
+  const e = email.trim()
+  if (!e) return null
+  // Minimal sanity check; don't overvalidate.
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return e
+  return e
+}
 
 function resolveConfigString(value: unknown, pageContext: any): string | null {
   try {
@@ -42,6 +62,21 @@ function resolveConfigString(value: unknown, pageContext: any): string | null {
   return null
 }
 
+// Optional AEO/GEO env vars (build-time)
+const SITE_SAME_AS = parseList(
+  getEnvFirst(['VITE_SITE_SAME_AS', 'VITE_SAME_AS', 'VITE_SITE_SOCIALS', 'VITE_SOCIALS'])
+)
+
+const SITE_CONTACT_EMAIL = normalizeEmail(
+  getEnvFirst(['VITE_SITE_CONTACT_EMAIL', 'VITE_CONTACT_EMAIL', 'VITE_SITE_EMAIL', 'VITE_EMAIL']) || null
+)
+
+const SITE_FOUNDING_DATE_RAW =
+  getEnvFirst(['VITE_SITE_FOUNDING_DATE', 'VITE_FOUNDING_DATE', 'VITE_SITE_FOUNDED', 'VITE_FOUNDED']) || null
+const SITE_FOUNDING_DATE = isYmd(SITE_FOUNDING_DATE_RAW) ? SITE_FOUNDING_DATE_RAW : null
+
+const SITE_AREA_SERVED = parseList(getEnvFirst(['VITE_SITE_AREA_SERVED', 'VITE_AREA_SERVED']))
+
 export function Head() {
   const pageContext = usePageContext()
 
@@ -55,51 +90,63 @@ export function Head() {
 
   const ogImage = origin ? `${origin}/og-default.png` : '/og-default.png'
   const logo512 = origin ? `${origin}/icon-512.png` : '/icon-512.png'
+  const contactUrl = origin ? `${origin}/contact` : '/contact'
 
   const orgId = origin ? `${origin}/#organization` : null
   const siteId = origin ? `${origin}/#website` : null
 
-  const contactUrl = origin ? `${origin}/contact` : '/contact'
-
+  // Organization JSON-LD (AEO/GEO)
   const organizationJsonLd =
     origin && orgId
       ? {
           '@context': 'https://schema.org',
           '@type': 'Organization',
           '@id': orgId,
+
           name: SITE_NAME,
+          alternateName: SITE_APP_NAME,
+          description: DEFAULT_DESCRIPTION,
+
           url: origin,
           logo: {
             '@type': 'ImageObject',
             url: logo512
           },
 
-          // AEO/GEO upgrades (all optional)
+          // Optional enrichments
           sameAs: SITE_SAME_AS.length ? SITE_SAME_AS : undefined,
-          foundingDate: SITE_FOUNDING_DATE || undefined,
+          foundingDate: SITE_FOUNDING_DATE ?? undefined,
           areaServed: SITE_AREA_SERVED.length ? SITE_AREA_SERVED : undefined,
+
+          // Contact clarity
           contactPoint: [
             {
               '@type': 'ContactPoint',
               contactType: 'inquiries',
               url: contactUrl,
-              email: SITE_CONTACT_EMAIL || undefined
+              email: SITE_CONTACT_EMAIL ?? undefined,
+              availableLanguage: ['en']
             }
           ]
         }
       : null
 
+  // WebSite JSON-LD
   const websiteJsonLd =
     origin && siteId
       ? {
           '@context': 'https://schema.org',
           '@type': 'WebSite',
           '@id': siteId,
+
           name: SITE_NAME,
+          alternateName: SITE_APP_NAME,
+
           url: origin,
           description: DEFAULT_DESCRIPTION,
-          publisher: orgId ? { '@id': orgId } : { '@type': 'Organization', name: SITE_NAME },
-          inLanguage: 'en-US'
+          inLanguage: 'en-US',
+
+          publisher: orgId ? { '@id': orgId } : { '@type': 'Organization', name: SITE_NAME }
         }
       : null
 
@@ -146,16 +193,10 @@ export function Head() {
 
       {/* Structured data */}
       {organizationJsonLd ? (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       ) : null}
       {websiteJsonLd ? (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       ) : null}
     </>
   )

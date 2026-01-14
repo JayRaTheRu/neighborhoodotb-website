@@ -1,6 +1,7 @@
 export { data }
-import { getAllContent } from '../../src/lib/content'
+
+import { getAllContentMeta } from '../../src/content/contentIndex'
 
 function data() {
-  return { items: getAllContent() }
+  return { items: getAllContentMeta() }
 }

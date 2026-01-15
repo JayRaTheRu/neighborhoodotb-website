@@ -6,6 +6,14 @@ import { usePageContext } from 'vike-react/usePageContext'
 const FUDKERS_NAME = 'FUDkers'
 const FUDKERS_CANONICAL_SITE = 'https://www.fudkers.xyz'
 
+function envFirst(...keys: string[]) {
+  for (const k of keys) {
+    const v = String((import.meta as any).env?.[k] ?? '').trim()
+    if (v) return v
+  }
+  return null
+}
+
 function resolveConfigString(value: unknown, pageContext: any): string | null {
   try {
     if (typeof value === 'string') {
@@ -28,15 +36,16 @@ function resolveConfigString(value: unknown, pageContext: any): string | null {
 export function Head() {
   const pageContext = usePageContext()
 
-  const origin = String(import.meta.env.VITE_SITE_ORIGIN ?? '').replace(/\/+$/, '') || pageContext.urlParsed?.origin || ''
+  const origin =
+    envFirst('VITE_SITE_ORIGIN') || pageContext.urlParsed?.origin || ''
   const canonical = origin ? `${origin}/fudkers` : null
   const orgId = origin ? `${origin}/#organization` : null
 
+  // Pull your exact page copy from pages/fudkers/+description.ts
   const description =
     resolveConfigString(pageContext.config?.description, pageContext) ??
-    'Owned IP character universe inside the Neighborhood ecosystem.'
+    'Fudkers, featured projects, and related drops from the NeighborhoodOTB ecosystem.'
 
-  // “CreativeWorkSeries” is a good fit for an IP / character universe.
   const fudkersJsonLd =
     canonical
       ? {
@@ -48,7 +57,7 @@ export function Head() {
           description,
           publisher: orgId ? { '@id': orgId } : undefined,
 
-          // Connect the hub page to the canonical external site
+          // Explicitly connect to the separate canonical site
           sameAs: [FUDKERS_CANONICAL_SITE],
           mainEntityOfPage: canonical
         }

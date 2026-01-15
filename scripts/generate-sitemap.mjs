@@ -20,6 +20,7 @@ const STATIC_ROUTES = [
   '/lab',
   '/brand-kit',
   '/contact',
+  '/legal',
   '/legal/privacy',
   '/legal/terms',
   '/content'

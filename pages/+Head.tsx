@@ -52,10 +52,10 @@ const SITE_CONTACT_EMAIL =
 const SITE_FOUNDING_DATE =
   (envString('VITE_SITE_FOUNDING_DATE') ?? envString('VITE_FOUNDING_DATE')) || null
 
-// If one value: "Worldwide" -> outputs string
-// If multiple: "United States,Worldwide" or JSON array -> outputs array
-const SITE_AREA_SERVED_LIST =
-  parseEnvList('VITE_AREA_SERVED').length > 0 ? parseEnvList('VITE_AREA_SERVED') : parseEnvList('VITE_SITE_AREA_SERVED')
+// Prefer one scheme but support legacy keys
+const AREA_SERVED_PRIMARY = parseEnvList('VITE_AREA_SERVED')
+const AREA_SERVED_FALLBACK = parseEnvList('VITE_SITE_AREA_SERVED')
+const SITE_AREA_SERVED_LIST = AREA_SERVED_PRIMARY.length ? AREA_SERVED_PRIMARY : AREA_SERVED_FALLBACK
 
 // AEO: explicit topical coverage for answer engines
 const SITE_KNOWS_ABOUT = parseEnvList('VITE_SITE_KNOWS_ABOUT')
@@ -129,6 +129,7 @@ export function Head() {
         }
       : undefined
 
+  // Include if we have an origin; email is optional
   const contactPoint =
     origin
       ? [

@@ -1,3 +1,5 @@
+// pages/index/+Page.tsx
+
 import React from 'react'
 import { MapSection } from '../../src/components/MapSection'
 import { FeaturedDrop } from '../../src/components/FeaturedDrop'
@@ -6,14 +8,20 @@ import { DispatchModule } from '../../src/components/DispatchModule'
 export default function Page() {
   return (
     <section>
-      <header className="homeHero">
-        <div className="homeKicker">THE HOUSE</div>
-        <h1 className="homeTitle">The Neighborhood On The Block</h1>
-        <p className="homeSub">
+      <header className="homeHero" data-reveal>
+        <div className="homeKicker" data-reveal data-reveal-delay="80" data-reveal-variant="fast">
+          THE HOUSE
+        </div>
+
+        <h1 className="homeTitle" data-reveal data-reveal-delay="140">
+          The Neighborhood On The Block
+        </h1>
+
+        <p className="homeSub" data-reveal data-reveal-delay="220">
           Culture house + creative studio + tools + drops. Built with intention — on the block and on the blockchain.
         </p>
 
-        <div className="homeActions">
+        <div className="homeActions" data-reveal data-reveal-delay="300">
           <a className="btn" href="/studio">
             Explore Studio
           </a>
@@ -23,11 +31,18 @@ export default function Page() {
         </div>
       </header>
 
-      <MapSection />
+      {/* Components below can optionally implement their own data-reveal internally later */}
+      <div data-reveal data-reveal-delay="120">
+        <MapSection />
+      </div>
 
-      <FeaturedDrop />
+      <div data-reveal data-reveal-delay="140">
+        <FeaturedDrop />
+      </div>
 
-      <DispatchModule source="home_dispatch" />
+      <div data-reveal data-reveal-delay="160">
+        <DispatchModule source="home_dispatch" />
+      </div>
     </section>
   )
 }

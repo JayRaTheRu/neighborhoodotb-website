@@ -827,3 +827,34 @@ input, textarea, select { font: inherit; }
   border-color: rgba(245, 160, 31, 0.85);
   background: rgba(245, 160, 31, 0.10);
 }
+
+/* ============================
+   Scroll Reveal (IntersectionObserver)
+   ============================ */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity var(--t-med) var(--ease),
+    transform var(--t-med) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+[data-reveal][data-reveal-variant="fast"] {
+  transition-duration: var(--t-fast);
+}
+
+[data-reveal].revealIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ensure content never gets stuck invisible for reduced-motion users */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

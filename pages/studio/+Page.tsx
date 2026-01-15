@@ -1,3 +1,5 @@
+// pages/studio/+Page.tsx
+
 import React from 'react'
 import { DispatchModule } from '../../src/components/DispatchModule'
 
@@ -44,8 +46,8 @@ const PROCESS: { step: string; detail: string }[] = [
 
 function CardGrid({ items }: { items: Card[] }) {
   return (
-    <div className="gridAuto gridAuto240">
-      {items.map((c) => {
+    <div className="gridAuto gridAuto240" data-reveal>
+      {items.map((c, i) => {
         const inner = (
           <div className="cardTop">
             <div className="cardRow">
@@ -67,12 +69,18 @@ function CardGrid({ items }: { items: Card[] }) {
           </div>
         )
 
+        const props = {
+          'data-reveal': true,
+          'data-reveal-delay': String(80 + i * 60),
+          'data-reveal-variant': 'fast'
+        } as const
+
         return c.href ? (
-          <a key={c.title} href={c.href} className="card">
+          <a key={c.title} href={c.href} className="card" {...props}>
             {inner}
           </a>
         ) : (
-          <div key={c.title} className="card">
+          <div key={c.title} className="card" {...props}>
             {inner}
           </div>
         )
@@ -84,14 +92,17 @@ function CardGrid({ items }: { items: Card[] }) {
 export default function Page() {
   return (
     <section>
-      <header className="sectionHeader">
-        <h1>OTB Studio</h1>
-        <p>
+      <header className="sectionHeader" data-reveal>
+        <h1 data-reveal data-reveal-delay="80">
+          OTB Studio
+        </h1>
+
+        <p data-reveal data-reveal-delay="140">
           The build and creative arm inside The Neighborhood—focused on systems, credible execution, and releases that
           compound.
         </p>
 
-        <div className="actionsRow">
+        <div className="actionsRow" data-reveal data-reveal-delay="220">
           <a className="btn" href="/contact">
             Start a project
           </a>
@@ -106,28 +117,42 @@ export default function Page() {
 
       <section className="homeSection" style={{ marginTop: 18 }}>
         <header className="sectionHeader">
-          <h2>What we build</h2>
-          <p>Clean foundations and real outputs. No fluff. No chaos.</p>
+          <h2 data-reveal data-reveal-delay="80">
+            What we build
+          </h2>
+          <p data-reveal data-reveal-delay="140">
+            Clean foundations and real outputs. No fluff. No chaos.
+          </p>
         </header>
+
         <CardGrid items={WHAT_WE_BUILD} />
       </section>
 
       <section className="homeSection" style={{ marginTop: 26 }}>
         <header className="sectionHeader">
-          <h2>Process</h2>
-          <p>Simple, repeatable, and built for momentum.</p>
+          <h2 data-reveal data-reveal-delay="80">
+            Process
+          </h2>
+          <p data-reveal data-reveal-delay="140">
+            Simple, repeatable, and built for momentum.
+          </p>
         </header>
 
-        <ol className="stepList">
-          {PROCESS.map((p) => (
-            <li key={p.step}>
+        <ol className="stepList" data-reveal>
+          {PROCESS.map((p, i) => (
+            <li
+              key={p.step}
+              data-reveal
+              data-reveal-delay={String(80 + i * 70)}
+              data-reveal-variant="fast"
+            >
               <strong>{p.step}:</strong> <span className="muted">{p.detail}</span>
             </li>
           ))}
         </ol>
       </section>
 
-      <section className="homeSection">
+      <section className="homeSection" data-reveal data-reveal-delay="120">
         <DispatchModule source="studio_dispatch" />
       </section>
     </section>

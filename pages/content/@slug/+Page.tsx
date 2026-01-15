@@ -27,9 +27,10 @@ export default function Page() {
         <header className="sectionHeader">
           <h1>Not found</h1>
           <p>That content page doesn’t exist.</p>
-          <div style={{ opacity: 0.7, fontSize: 13 }}>Slug: {slug}</div>
+          <div className="controlsMeta">Slug: {slug}</div>
         </header>
-        <a href="/content" style={{ textDecoration: 'underline' }}>
+
+        <a href="/content" className="linkInline">
           Back to Content
         </a>
       </section>
@@ -49,7 +50,7 @@ export default function Page() {
     <article>
       <header className="sectionHeader">
         <div style={{ marginBottom: 10 }}>
-          <a href="/content" style={{ textDecoration: 'underline', opacity: 0.9 }}>
+          <a href="/content" className="linkInline">
             ← Back to Content
           </a>
         </div>
@@ -60,7 +61,7 @@ export default function Page() {
         <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
           <span className="pill">{typeLabel(meta)}</span>
           {meta.featured ? <span className="pill">Featured</span> : null}
-          {meta.date ? <span style={{ opacity: 0.7, fontSize: 13 }}>{formatDateYmd(meta.date)}</span> : null}
+          {meta.date ? <span className="controlsMeta">{formatDateYmd(meta.date)}</span> : null}
         </div>
 
         {meta.tags && meta.tags.length > 0 ? (
@@ -78,52 +79,32 @@ export default function Page() {
         <Component />
       </div>
 
-      <nav
-        aria-label="Content navigation"
-        style={{
-          marginTop: 26,
-          display: 'grid',
-          gap: 12,
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))'
-        }}
-      >
-        <div
-          style={{
-            padding: 14,
-            border: '1px solid rgba(255,255,255,0.12)',
-            borderRadius: 14
-          }}
-        >
-          <div style={{ opacity: 0.7, fontSize: 13, marginBottom: 8 }}>Newer</div>
+      <nav aria-label="Content navigation" className="panelGrid" style={{ marginTop: 26 }}>
+        <div className="panelNavCard">
+          <div className="panelKicker">Newer</div>
           {newer ? (
             <a href={`/content/${newer.slug}`} style={{ textDecoration: 'none' }}>
               <strong>{newer.title}</strong>
             </a>
           ) : (
-            <div style={{ opacity: 0.7, fontSize: 13 }}>None</div>
+            <div className="controlsMeta">None</div>
           )}
         </div>
 
-        <div
-          style={{
-            padding: 14,
-            border: '1px solid rgba(255,255,255,0.12)',
-            borderRadius: 14
-          }}
-        >
-          <div style={{ opacity: 0.7, fontSize: 13, marginBottom: 8 }}>Older</div>
+        <div className="panelNavCard">
+          <div className="panelKicker">Older</div>
           {older ? (
             <a href={`/content/${older.slug}`} style={{ textDecoration: 'none' }}>
               <strong>{older.title}</strong>
             </a>
           ) : (
-            <div style={{ opacity: 0.7, fontSize: 13 }}>None</div>
+            <div className="controlsMeta">None</div>
           )}
         </div>
       </nav>
 
       <div style={{ marginTop: 18 }}>
-        <a href="/content" style={{ textDecoration: 'underline' }}>
+        <a href="/content" className="linkInline">
           Back to Content
         </a>
       </div>

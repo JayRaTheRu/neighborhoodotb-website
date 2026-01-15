@@ -44,32 +44,23 @@ const PROCESS: { step: string; detail: string }[] = [
 
 function CardGrid({ items }: { items: Card[] }) {
   return (
-    <div
-      style={{
-        display: 'grid',
-        gap: 14,
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))'
-      }}
-    >
+    <div className="gridAuto gridAuto240">
       {items.map((c) => {
-        const content = (
-          <div
-            style={{
-              padding: 16,
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: 14,
-              height: '100%'
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center' }}>
-              <strong style={{ fontSize: 16 }}>{c.title}</strong>
+        const inner = (
+          <div className="cardTop">
+            <div className="cardRow">
+              <strong className="cardTitle" style={{ margin: 0 }}>
+                {c.title}
+              </strong>
               {c.pill ? <span className="pill">{c.pill}</span> : null}
             </div>
 
-            <p style={{ marginTop: 10, opacity: 0.85, lineHeight: 1.6 }}>{c.body}</p>
+            <p className="cardBody" style={{ margin: 0 }}>
+              {c.body}
+            </p>
 
             {c.href ? (
-              <div style={{ marginTop: 12 }}>
+              <div className="cardMeta">
                 <span className="muted">Open →</span>
               </div>
             ) : null}
@@ -77,11 +68,13 @@ function CardGrid({ items }: { items: Card[] }) {
         )
 
         return c.href ? (
-          <a key={c.title} href={c.href} style={{ textDecoration: 'none' }}>
-            {content}
+          <a key={c.title} href={c.href} className="card">
+            {inner}
           </a>
         ) : (
-          <div key={c.title}>{content}</div>
+          <div key={c.title} className="card">
+            {inner}
+          </div>
         )
       })}
     </div>
@@ -98,14 +91,14 @@ export default function Page() {
           compound.
         </p>
 
-        <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <a className="btn" href="/contact" style={{ textDecoration: 'none' }}>
+        <div className="actionsRow">
+          <a className="btn" href="/contact">
             Start a project
           </a>
-          <a className="btn secondary" href="/content" style={{ textDecoration: 'none' }}>
+          <a className="btnGhost" href="/content">
             See Drops
           </a>
-          <a className="btn secondary" href="/brand-kit" style={{ textDecoration: 'none' }}>
+          <a className="btnGhost" href="/brand-kit">
             Brand Kit
           </a>
         </div>
@@ -125,18 +118,18 @@ export default function Page() {
           <p>Simple, repeatable, and built for momentum.</p>
         </header>
 
-        <ol style={{ marginTop: 10, paddingLeft: 18, display: 'grid', gap: 12 }}>
+        <ol className="stepList">
           {PROCESS.map((p) => (
-            <li key={p.step} style={{ lineHeight: 1.7 }}>
-              <strong>{p.step}:</strong> <span style={{ opacity: 0.88 }}>{p.detail}</span>
+            <li key={p.step}>
+              <strong>{p.step}:</strong> <span className="muted">{p.detail}</span>
             </li>
           ))}
         </ol>
       </section>
 
-      <div style={{ marginTop: 28 }}>
+      <section className="homeSection">
         <DispatchModule source="studio_dispatch" />
-      </div>
+      </section>
     </section>
   )
 }

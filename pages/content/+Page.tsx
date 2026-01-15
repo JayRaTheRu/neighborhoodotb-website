@@ -66,6 +66,9 @@ export default function Page() {
     })
   }, [items, q, type, tag])
 
+  const tagLabel = tag !== 'all' ? (tagOptions.find((x) => x.k === tag)?.label ?? tag) : null
+  const qLabel = q.trim() ? q.trim() : null
+
   return (
     <section>
       <header className="sectionHeader">
@@ -73,43 +76,16 @@ export default function Page() {
         <p>Drops, music, visuals, writing, experiments — each with a dedicated, shareable page.</p>
       </header>
 
-      <div
-        style={{
-          display: 'grid',
-          gap: 12,
-          marginBottom: 16,
-          padding: 14,
-          border: '1px solid rgba(255,255,255,0.12)',
-          borderRadius: 14
-        }}
-      >
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+      <div className="controlsBar">
+        <div className="controlsRow">
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search titles, tags, summaries…"
-            style={{
-              flex: '1 1 240px',
-              padding: '10px 12px',
-              borderRadius: 12,
-              border: '1px solid rgba(255,255,255,0.14)',
-              background: 'transparent',
-              color: 'inherit'
-            }}
+            style={{ flex: '1 1 240px' }}
           />
 
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            style={{
-              flex: '0 0 auto',
-              padding: '10px 12px',
-              borderRadius: 12,
-              border: '1px solid rgba(255,255,255,0.14)',
-              background: 'transparent',
-              color: 'inherit'
-            }}
-          >
+          <select value={type} onChange={(e) => setType(e.target.value)} style={{ flex: '0 0 auto' }}>
             <option value="all">All types</option>
             {typeOptions.map((t) => (
               <option key={t} value={t}>
@@ -118,18 +94,7 @@ export default function Page() {
             ))}
           </select>
 
-          <select
-            value={tag}
-            onChange={(e) => setTag(e.target.value)}
-            style={{
-              flex: '0 0 auto',
-              padding: '10px 12px',
-              borderRadius: 12,
-              border: '1px solid rgba(255,255,255,0.14)',
-              background: 'transparent',
-              color: 'inherit'
-            }}
-          >
+          <select value={tag} onChange={(e) => setTag(e.target.value)} style={{ flex: '0 0 auto' }}>
             <option value="all">All tags</option>
             {tagOptions.map((t) => (
               <option key={t.k} value={t.k}>
@@ -139,36 +104,28 @@ export default function Page() {
           </select>
         </div>
 
-        <div style={{ opacity: 0.75, fontSize: 13 }}>
+        <div className="controlsMeta">
           Showing <strong>{filtered.length}</strong> of <strong>{items.length}</strong>
           {type !== 'all' ? ` • type: ${type}` : ''}
-          {tag !== 'all' ? ` • tag: ${tagOptions.find((x) => x.k === tag)?.label ?? tag}` : ''}
-          {q.trim() ? ` • query: "${q.trim()}"` : ''}
+          {tagLabel ? ` • tag: ${tagLabel}` : ''}
+          {qLabel ? ` • query: "${qLabel}"` : ''}
         </div>
       </div>
 
-      <div style={{ display: 'grid', gap: 14 }}>
+      <div className="stack">
         {filtered.map((item) => (
-          <a
-            key={item.slug}
-            href={`/content/${item.slug}`}
-            style={{
-              display: 'block',
-              padding: 16,
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: 14,
-              textDecoration: 'none'
-            }}
-          >
+          <a key={item.slug} href={`/content/${item.slug}`} className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-              <strong style={{ fontSize: 16 }}>{item.title}</strong>
-              <span style={{ opacity: 0.7, fontSize: 13 }}>
+              <strong className="cardTitle" style={{ margin: 0 }}>
+                {item.title}
+              </strong>
+              <span className="cardMeta">
                 {typeLabel(item)}
                 {item.date ? ` • ${formatDateYmd(item.date)}` : ''}
               </span>
             </div>
 
-            {item.summary ? <p style={{ marginTop: 8, opacity: 0.85 }}>{item.summary}</p> : null}
+            {item.summary ? <p className="cardBody" style={{ marginTop: 8 }}>{item.summary}</p> : null}
 
             {item.tags && item.tags.length > 0 ? (
               <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8 }}>

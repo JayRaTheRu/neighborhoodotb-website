@@ -21,8 +21,10 @@ function csvEnv(name: string): string[] {
 }
 
 const SITE_SAME_AS = csvEnv('VITE_SITE_SAME_AS')
-const SITE_CONTACT_EMAIL = String(import.meta.env.VITE_SITE_CONTACT_EMAIL ?? '').trim() || null
-const SITE_FOUNDING_DATE = String(import.meta.env.VITE_SITE_FOUNDING_DATE ?? '').trim() || null
+const SITE_CONTACT_EMAIL =
+  String(import.meta.env.VITE_SITE_CONTACT_EMAIL ?? import.meta.env.VITE_CONTACT_EMAIL ?? '').trim() || null
+const SITE_FOUNDING_DATE =
+  String(import.meta.env.VITE_SITE_FOUNDING_DATE ?? import.meta.env.VITE_FOUNDING_DATE ?? '').trim() || null
 
 // If you set one value: "Worldwide" -> outputs string
 // If you set multiple: "United States, Worldwide" -> outputs array

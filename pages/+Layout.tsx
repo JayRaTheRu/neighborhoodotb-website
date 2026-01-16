@@ -47,44 +47,45 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       if (delayRaw) {
         const ms = Number(delayRaw)
         if (!Number.isNaN(ms) && ms >= 0) {
-          el.style.setProperty('--reveal-delay', `${ms}ms`)
+          el.style.transitionDelay = `${ms}ms`
         }
       }
 
       // Reduced-motion: show immediately
       if (prefersReduced) {
-        el.classList.add('revealIn')
+        el.classList.add('is-inview')
         return
       }
 
       observer?.observe(el)
     }
 
-    if (prefersReduced) {
-      // Ensure everything is visible immediately
-      scopeEl().querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
-        bindOne(el)
-      })
-      return
+    let observer: IntersectionObserver | null = null
+
+    if (!prefersReduced) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            const el = e.target as HTMLElement
+            const revealOnce = el.getAttribute('data-reveal-once') !== 'false'
+
+            if (e.isIntersecting) {
+              el.classList.add('is-inview')
+              if (revealOnce) observer?.unobserve(el)
+            } else if (!revealOnce) {
+              el.classList.remove('is-inview')
+            }
+          }
+        },
+        {
+          threshold: 0.12,
+          rootMargin: '0px 0px -10% 0px'
+        }
+      )
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue
-          const el = e.target as HTMLElement
-          el.classList.add('revealIn')
-          observer.unobserve(el)
-        }
-      },
-      {
-        threshold: 0.12,
-        rootMargin: '0px 0px -12% 0px'
-      }
-    )
-
     const scan = () => {
-      scopeEl().querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => bindOne(el, observer))
+      scopeEl().querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => bindOne(el, observer ?? undefined))
     }
 
     // Initial scan
@@ -99,7 +100,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     return () => {
       mo.disconnect()
-      observer.disconnect()
+      observer?.disconnect()
     }
   }, [])
 

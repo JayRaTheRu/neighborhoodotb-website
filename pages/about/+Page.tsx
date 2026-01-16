@@ -16,7 +16,7 @@ const MASTER_VALUES = [
 export default function Page() {
   return (
     <section>
-      <header className="sectionHeader">
+      <header className="sectionHeader" data-reveal="up">
         <h1>About</h1>
         <p>
           The Neighborhood is a culture house with a business engine and an owned IP universe. Everything lives inside
@@ -25,7 +25,7 @@ export default function Page() {
       </header>
 
       <div className="stack" style={{ maxWidth: 980 }}>
-        <div className="panel">
+        <div className="panel" data-reveal="up">
           <h2 className="panelTitle">Purpose</h2>
           <p className="panelText">
             Unite independent creatives, thinkers, and strategists into a collaborative force that creates with
@@ -33,7 +33,7 @@ export default function Page() {
           </p>
         </div>
 
-        <div className="panel">
+        <div className="panel" data-reveal="up" data-reveal-delay="80">
           <h2 className="panelTitle">Point of View</h2>
           <p className="panelText">Creativity is powerful. Culture is sacred. Technology is a tool.</p>
           <ul className="panelList">
@@ -42,7 +42,7 @@ export default function Page() {
           </ul>
         </div>
 
-        <div className="panel">
+        <div className="panel" data-reveal="up" data-reveal-delay="160">
           <h2 className="panelTitle">Master Values (non-negotiable)</h2>
           <div className="chipGrid">
             {MASTER_VALUES.map((v) => (
@@ -53,7 +53,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="panel">
+        <div className="panel" data-reveal="up" data-reveal-delay="240">
           <h2 className="panelTitle">Gate Test</h2>
           <p className="panelText" style={{ marginBottom: 0 }}>
             If a project, collab, post, product, client, or drop violates any Master Value, it gets corrected or killed

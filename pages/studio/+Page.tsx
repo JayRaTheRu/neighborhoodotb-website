@@ -46,7 +46,7 @@ const PROCESS: { step: string; detail: string }[] = [
 
 function CardGrid({ items }: { items: Card[] }) {
   return (
-    <div className="gridAuto gridAuto240" data-reveal>
+    <div className="gridAuto gridAuto240">
       {items.map((c, i) => {
         const inner = (
           <div className="cardTop">
@@ -70,7 +70,7 @@ function CardGrid({ items }: { items: Card[] }) {
         )
 
         const props = {
-          'data-reveal': true,
+          'data-reveal': 'up',
           'data-reveal-delay': String(80 + i * 60),
           'data-reveal-variant': 'fast'
         } as const
@@ -92,17 +92,17 @@ function CardGrid({ items }: { items: Card[] }) {
 export default function Page() {
   return (
     <section>
-      <header className="sectionHeader" data-reveal>
-        <h1 data-reveal data-reveal-delay="80">
+      <header className="sectionHeader" data-reveal="up">
+        <h1>
           OTB Studio
         </h1>
 
-        <p data-reveal data-reveal-delay="140">
+        <p>
           The build and creative arm inside The Neighborhood—focused on systems, credible execution, and releases that
           compound.
         </p>
 
-        <div className="actionsRow" data-reveal data-reveal-delay="220">
+        <div className="actionsRow" data-reveal="fade" data-reveal-delay="220">
           <a className="btn" href="/contact">
             Start a project
           </a>
@@ -116,11 +116,11 @@ export default function Page() {
       </header>
 
       <section className="homeSection" style={{ marginTop: 18 }}>
-        <header className="sectionHeader">
-          <h2 data-reveal data-reveal-delay="80">
+        <header className="sectionHeader" data-reveal="up">
+          <h2>
             What we build
           </h2>
-          <p data-reveal data-reveal-delay="140">
+          <p>
             Clean foundations and real outputs. No fluff. No chaos.
           </p>
         </header>
@@ -129,20 +129,20 @@ export default function Page() {
       </section>
 
       <section className="homeSection" style={{ marginTop: 26 }}>
-        <header className="sectionHeader">
-          <h2 data-reveal data-reveal-delay="80">
+        <header className="sectionHeader" data-reveal="up">
+          <h2>
             Process
           </h2>
-          <p data-reveal data-reveal-delay="140">
+          <p>
             Simple, repeatable, and built for momentum.
           </p>
         </header>
 
-        <ol className="stepList" data-reveal>
+        <ol className="stepList">
           {PROCESS.map((p, i) => (
             <li
               key={p.step}
-              data-reveal
+              data-reveal="up"
               data-reveal-delay={String(80 + i * 70)}
               data-reveal-variant="fast"
             >
@@ -152,7 +152,7 @@ export default function Page() {
         </ol>
       </section>
 
-      <section className="homeSection" data-reveal data-reveal-delay="120">
+      <section className="homeSection" data-reveal="up" data-reveal-delay="120">
         <DispatchModule source="studio_dispatch" />
       </section>
     </section>

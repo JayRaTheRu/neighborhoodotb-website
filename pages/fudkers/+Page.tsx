@@ -3,7 +3,7 @@ import React from 'react'
 export default function Page() {
   return (
     <section>
-      <header className="sectionHeader">
+      <header className="sectionHeader" data-reveal="up">
         <h1>The Neighborhood FUDkers</h1>
         <p>
           The owned IP universe inside the house. FUDkers is the allowed insanity: satirical, raw, absurd — but it does
@@ -12,17 +12,17 @@ export default function Page() {
       </header>
 
       <div className="stack" style={{ maxWidth: 900 }}>
-        <div className="panel">
+        <div className="panel" data-reveal="up">
           <h2 className="panelTitle">Enter the FUDkers site</h2>
           <p className="panelText">The full universe, drops, and collection live on the dedicated FUDkers domain.</p>
-          <div className="panelActions">
+          <div className="panelActions" data-reveal="fade" data-reveal-delay="80">
             <a className="btn btnAccent" href="https://fudkers.xyz" target="_blank" rel="noreferrer">
               Open FUDkers.xyz (new tab)
             </a>
           </div>
         </div>
 
-        <div className="panel">
+        <div className="panel" data-reveal="up" data-reveal-delay="80">
           <h2 className="panelTitle">Brand boundaries</h2>
           <ul className="panelList">
             <li>FUDkers is an IP line inside the Neighborhood culture house.</li>

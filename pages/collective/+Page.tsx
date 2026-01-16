@@ -3,7 +3,7 @@ import React from 'react'
 export default function Page() {
   return (
     <section>
-      <header className="sectionHeader">
+      <header className="sectionHeader" data-reveal="up">
         <h1>The Collective</h1>
         <p>
           The Collective is an invite-based roster of independent collaborators who partner on select projects under
@@ -12,7 +12,7 @@ export default function Page() {
       </header>
 
       <div className="stack" style={{ maxWidth: 900 }}>
-        <div className="panel">
+        <div className="panel" data-reveal="up">
           <h2 className="panelTitle">What belongs here</h2>
           <ul className="panelList">
             <li>Creators who have collaborated meaningfully with the Neighborhood.</li>
@@ -21,10 +21,10 @@ export default function Page() {
           </ul>
         </div>
 
-        <div className="panel">
+        <div className="panel" data-reveal="up" data-reveal-delay="80">
           <h2 className="panelTitle">Nominate a collaborator</h2>
           <p className="panelText">Soon: a nomination form that routes into a private review pipeline. For now, use Contact.</p>
-          <div className="panelActions">
+          <div className="panelActions" data-reveal="fade" data-reveal-delay="140">
             <a className="btnGhost" href="/contact">
               Go to Contact
             </a>

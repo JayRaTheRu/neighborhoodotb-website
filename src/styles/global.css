@@ -835,20 +835,42 @@ input, textarea, select { font: inherit; }
 [data-reveal] {
   opacity: 0;
   transform: translateY(10px);
+  filter: blur(0.2px);
   transition:
     opacity var(--t-med) var(--ease),
-    transform var(--t-med) var(--ease);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+    transform var(--t-med) var(--ease),
+    filter var(--t-med) var(--ease);
+  will-change: opacity, transform, filter;
+}
+
+[data-reveal="fade"] {
+  transform: none;
+}
+
+[data-reveal="up"] {
+  transform: translateY(10px);
+}
+
+[data-reveal="down"] {
+  transform: translateY(-10px);
+}
+
+[data-reveal="left"] {
+  transform: translateX(10px);
+}
+
+[data-reveal="right"] {
+  transform: translateX(-10px);
 }
 
 [data-reveal][data-reveal-variant="fast"] {
   transition-duration: var(--t-fast);
 }
 
-[data-reveal].revealIn {
+[data-reveal].is-inview {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
+  filter: none;
 }
 
 /* Ensure content never gets stuck invisible for reduced-motion users */
@@ -856,5 +878,7 @@ input, textarea, select { font: inherit; }
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
+    transition: none !important;
   }
 }

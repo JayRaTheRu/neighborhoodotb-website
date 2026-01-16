@@ -40,14 +40,21 @@ const cards: MapCard[] = [
 export function MapSection() {
   return (
     <section className="homeSection">
-      <header className="sectionHeader">
+      <header className="sectionHeader" data-reveal>
         <h2>The Map</h2>
         <p>What connects to what — and why it stays clean.</p>
       </header>
 
-      <div className="mapGrid">
-        {cards.map((c) => (
-          <a key={c.title} href={c.href} className="card">
+      <div className="mapGrid" data-reveal>
+        {cards.map((c, i) => (
+          <a
+            key={c.title}
+            href={c.href}
+            className="card"
+            data-reveal
+            data-reveal-delay={String(80 + i * 60)}
+            data-reveal-variant="fast"
+          >
             <div className="cardTop">
               <div className="pill">{c.label}</div>
               <div className="cardTitle">{c.title}</div>
@@ -62,7 +69,7 @@ export function MapSection() {
         ))}
       </div>
 
-      <div className="mapFooter">
+      <div className="mapFooter" data-reveal data-reveal-delay="120">
         <span className="muted">
           Governance rule: if it breaks a Master Value, it doesn’t ship — no matter how profitable or viral.
         </span>

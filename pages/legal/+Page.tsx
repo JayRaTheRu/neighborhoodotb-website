@@ -3,13 +3,19 @@ import React from 'react'
 export default function Page() {
   return (
     <section>
-      <header className="sectionHeader" data-reveal="up">
+      <header className="sectionHeader" data-reveal>
         <h1>Legal</h1>
         <p>Policies and terms for using NeighborhoodOTB.io.</p>
       </header>
 
       <div className="stack" style={{ maxWidth: 900 }}>
-        <a className="card" href="/legal/privacy" data-reveal="up" data-reveal-variant="fast">
+        <a
+          className="card"
+          href="/legal/privacy"
+          data-reveal
+          data-reveal-delay="80"
+          data-reveal-variant="fast"
+        >
           <strong className="cardTitle" style={{ margin: 0 }}>
             Privacy Policy
           </strong>
@@ -19,7 +25,13 @@ export default function Page() {
           <div className="cardMeta">Open →</div>
         </a>
 
-        <a className="card" href="/legal/terms" data-reveal="up" data-reveal-delay="80" data-reveal-variant="fast">
+        <a
+          className="card"
+          href="/legal/terms"
+          data-reveal
+          data-reveal-delay="140"
+          data-reveal-variant="fast"
+        >
           <strong className="cardTitle" style={{ margin: 0 }}>
             Terms of Use
           </strong>

@@ -28,12 +28,12 @@ export function FeaturedDrop() {
 
   return (
     <section className="homeSection">
-      <header className="sectionHeader">
+      <header className="sectionHeader" data-reveal>
         <h2>Featured Drop</h2>
         <p>The newest release with a dedicated, shareable page.</p>
       </header>
 
-      <a href={`/content/${featured.slug}`} className="featured">
+      <a href={`/content/${featured.slug}`} className="featured" data-reveal data-reveal-delay="80">
         <div className="featuredMeta">
           <div className="pill">Drop</div>
           <div className="muted">{formatDate(featured.date)}</div>

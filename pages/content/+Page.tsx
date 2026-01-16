@@ -71,12 +71,12 @@ export default function Page() {
 
   return (
     <section>
-      <header className="sectionHeader" data-reveal="up">
+      <header className="sectionHeader" data-reveal>
         <h1>Content</h1>
         <p>Drops, music, visuals, writing, experiments — each with a dedicated, shareable page.</p>
       </header>
 
-      <div className="controlsBar" data-reveal="fade" data-reveal-delay="80">
+      <div className="controlsBar" data-reveal data-reveal-delay="80">
         <div className="controlsRow">
           <input
             value={q}
@@ -113,17 +113,15 @@ export default function Page() {
       </div>
 
       <div className="stack">
-        {filtered.map((item, i) => {
-          const delay = Math.min(320, 80 + i * 60)
-          return (
-            <a
-              key={item.slug}
-              href={`/content/${item.slug}`}
-              className="card"
-              data-reveal="up"
-              data-reveal-delay={String(delay)}
-              data-reveal-variant="fast"
-            >
+        {filtered.map((item, i) => (
+          <a
+            key={item.slug}
+            href={`/content/${item.slug}`}
+            className="card"
+            data-reveal
+            data-reveal-delay={String(80 + i * 60)}
+            data-reveal-variant="fast"
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
               <strong className="cardTitle" style={{ margin: 0 }}>
                 {item.title}
@@ -145,9 +143,8 @@ export default function Page() {
                 ))}
               </div>
             ) : null}
-            </a>
-          )
-        })}
+          </a>
+        ))}
       </div>
     </section>
   )

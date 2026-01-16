@@ -107,6 +107,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="site">
       <div className="scrollProgress" aria-hidden="true" />
+      <div id="routeWipe" aria-hidden="true" />
       <HeaderNav />
       <main ref={mainRef} className="main">
         {children}

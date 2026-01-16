@@ -24,13 +24,13 @@ export default function Page() {
   if (!entry) {
     return (
       <section>
-        <header className="sectionHeader" data-reveal="up">
+        <header className="sectionHeader" data-reveal>
           <h1>Not found</h1>
           <p>That content page doesn’t exist.</p>
           <div className="controlsMeta">Slug: {slug}</div>
         </header>
 
-        <a href="/content" className="linkInline" data-reveal="fade" data-reveal-delay="80">
+        <a href="/content" className="linkInline" data-reveal data-reveal-delay="80">
           Back to Content
         </a>
       </section>
@@ -48,7 +48,7 @@ export default function Page() {
 
   return (
     <article>
-      <header className="sectionHeader" data-reveal="up">
+      <header className="sectionHeader" data-reveal>
         <div style={{ marginBottom: 10 }}>
           <a href="/content" className="linkInline">
             ← Back to Content
@@ -79,8 +79,8 @@ export default function Page() {
         <Component />
       </div>
 
-      <nav aria-label="Content navigation" className="panelGrid" style={{ marginTop: 26 }}>
-        <div className="panelNavCard" data-reveal="up" data-reveal-variant="fast">
+      <nav aria-label="Content navigation" className="panelGrid" style={{ marginTop: 26 }} data-reveal>
+        <div className="panelNavCard" data-reveal data-reveal-delay="80" data-reveal-variant="fast">
           <div className="panelKicker">Newer</div>
           {newer ? (
             <a href={`/content/${newer.slug}`} style={{ textDecoration: 'none' }}>
@@ -91,7 +91,7 @@ export default function Page() {
           )}
         </div>
 
-        <div className="panelNavCard" data-reveal="up" data-reveal-delay="80" data-reveal-variant="fast">
+        <div className="panelNavCard" data-reveal data-reveal-delay="140" data-reveal-variant="fast">
           <div className="panelKicker">Older</div>
           {older ? (
             <a href={`/content/${older.slug}`} style={{ textDecoration: 'none' }}>
@@ -103,8 +103,8 @@ export default function Page() {
         </div>
       </nav>
 
-      <div style={{ marginTop: 18 }}>
-        <a href="/content" className="linkInline" data-reveal="fade" data-reveal-delay="120">
+      <div style={{ marginTop: 18 }} data-reveal data-reveal-delay="120">
+        <a href="/content" className="linkInline">
           Back to Content
         </a>
       </div>

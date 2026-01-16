@@ -1,31 +1,66 @@
-# AGENTS.md
+# AGENTS.md — NeighborhoodOTB Website
 
-## Goal (current task)
+## 1) Scope (non-negotiable)
+- Work only inside this repository/workspace.
+- Keep diffs small and targeted. Avoid refactors unless required to complete the task.
+- Do NOT modify SEO head logic (`pages/+Head.tsx` and any page-specific `+Head.tsx`) unless explicitly requested.
+- Do NOT change routing structure or Vike configs unless explicitly requested.
+- Do NOT change build/deploy configuration unless explicitly requested.
 
-Roll out `data-reveal`, `data-reveal-delay`, and optional `data-reveal-variant` across page-level + key section components.
-Do NOT blanket animate entire MDX/prose bodies.
+## 2) Brand / UX constraints
+- Style: Street Editorial (sharp, rule-based, restrained).
+- Accent: marigold `#F5A01F` only (no new accent colors).
+- Accessibility: honor `prefers-reduced-motion`; motion must be disabled or replaced with instant state changes.
 
-## Project structure notes
+## 3) Scroll-reveal system contract
+Use reveal attributes only on:
+- page headers
+- major sections
+- grids/cards
+- CTA/action rows
 
-- Pages live in `pages/**/+Page.tsx` (Vike-style pages).
-- Shared sections/components are in `src/components/**`.
+Do NOT blanket-animate MDX/prose bodies (`.prose` / MDX content).
 
-## Implementation rules
+### Allowed attributes
+- `data-reveal` (enables reveal)
+- `data-reveal-delay="NN"` (milliseconds; number as string)
+- `data-reveal-variant="..."` (only if supported by current CSS/observer)
+- `data-reveal-once="true"` (optional; only if supported by current observer)
 
-- Add `data-reveal` only to: page header wrappers, major sections, grids/cards, and CTA rows.
-- Do NOT add reveal attributes to every paragraph in `.prose` / MDX.
-- For card grids: stagger delays like `80 + i*60`. Use `data-reveal-variant="fast"` on cards if available.
-- Keep markup edits minimal—no refactors unless required.
+### Stagger rules
+- For grids/cards: stagger like `80 + i*60` (or similar).
+- Apply reveal to the card/container, not each inner paragraph.
 
-## Commands (pick what exists in package.json)
+## 4) Implementation rules
+- Prefer shared classes/utilities in `src/styles/global.css` over inline styles.
+- Keep markup edits minimal—use `className` + data attributes rather than restructuring components.
+- Do not introduce new animation libraries unless explicitly requested.
 
-- Install: `pnpm install --frozen-lockfile` OR `npm ci`
-- Typecheck: `pnpm typecheck` OR `npm run typecheck`
-- Build: `pnpm build` OR `npm run build`
-- Lint (if present): `pnpm lint` OR `npm run lint`
+## 5) Verification (required before final)
+- Install (choose what exists in repo): `npm ci` (preferred) or `npm install` / `pnpm install --frozen-lockfile`.
+- Build: `npm run build` (or `pnpm build` if repo uses pnpm).
 
-## Definition of done
+### Manual quick check (local browser)
+- Home: hero + major sections behave correctly (no visual glitches during navigation).
+- Studio: cards + process list reveal with stagger.
+- Content list: controls + cards reveal; content slug pages do NOT animate `.prose` body.
+- Reduced motion: reveals appear immediately; route transitions (if any) do not animate.
 
-- The specified pages + shared modules have reveal tags in the right places (not spammed).
-- Build/typecheck passes.
-- Changes delivered as a single PR (or split into 2 PRs: pages first, shared components second).
+## 6) Output requirements (agent summary)
+- Summarize changes in 3–6 bullets.
+- List modified files.
+- Confirm build output (pass/fail).
+- Call out any unverified visual behavior explicitly.
+
+## 7) Codex workflow (required)
+- Before making any changes, read `codex/HANDOFF.md`.
+- Use `codex/HANDOFF.md` as the source of truth:
+  - Follow only the tasks under `## CURRENT STATUS` / `## CURRENT INSTRUCTIONS` (whichever heading exists).
+  - If both exist, treat `CURRENT STATUS` as source-of-truth and `CURRENT INSTRUCTIONS` as the task list.
+- Do not delete prior content from HANDOFF; mark checklist items done with `[x]`.
+- When finished, append a structured completion summary under `## REPORT` in `codex/HANDOFF.md` including:
+  - Files changed
+  - What changed (high-level)
+  - Build/typecheck status
+  - Manual verification notes (and whether verified locally in a browser)
+

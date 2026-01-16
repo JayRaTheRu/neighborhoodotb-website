@@ -102,7 +102,7 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
   }
 
   return (
-    <section className="dispatch">
+    <section className="dispatch" data-reveal>
       <div className="dispatchHeader">
         <h2 className="dispatchTitle">The Neighborhood Dispatch</h2>
         <p className="dispatchSub">Drop alerts, experiments, and releases. No hype spam. Just signals.</p>

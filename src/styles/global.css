@@ -56,7 +56,7 @@ body {
 /* Links */
 a { color: inherit; text-decoration: none; }
 
-/* Make “important” links feel deliberate: underline on intent */
+/* Make ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œimportantÃƒÂ¢Ã¢â€šÂ¬Ã‚Â links feel deliberate: underline on intent */
 .prose a,
 .cardCta,
 .featuredCta {
@@ -112,6 +112,56 @@ img { max-width: 100%; height: auto; display: block; }
   z-index: 9999;
   opacity: 0.95;
   transform: translateZ(0);
+}
+
+/* Route wipe transition */
+#routeWipe {
+  position: fixed;
+  inset: 0;
+  display: none;
+  background: transparent;
+  transform: translate3d(0, -120%, 0);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 10000;
+  contain: paint;
+  will-change: transform, opacity;
+  transition:
+    transform var(--wipe-in, 260ms) var(--ease),
+    opacity var(--wipe-in, 260ms) var(--ease);
+}
+
+
+#routeWipe.is-wiping-in,
+#routeWipe.is-wiping-out {
+  display: block;
+  visibility: visible;
+  background: var(--bg);
+}
+
+#routeWipe.is-wiping-in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+#routeWipe.is-wiping-out {
+  opacity: 1;
+  transform: translate3d(0, 120%, 0);
+  transition-duration: var(--wipe-out, 320ms);
+}
+
+
+#routeWipe.is-reset {
+  display: block;
+  transition: none;
+  opacity: 0;
+  transform: translate3d(0, -120%, 0);
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #routeWipe { display: none; }
 }
 
 /* Header / Nav */
@@ -818,7 +868,7 @@ input, textarea, select { font: inherit; }
   margin-bottom: 8px;
 }
 
-/* Button variant for “accent-outline” CTAs (FUDkers external link, etc.) */
+/* Button variant for ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œaccent-outlineÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CTAs (FUDkers external link, etc.) */
 .btnAccent {
   border: 1px solid rgba(245, 160, 31, 0.55);
   background: rgba(245, 160, 31, 0.06);

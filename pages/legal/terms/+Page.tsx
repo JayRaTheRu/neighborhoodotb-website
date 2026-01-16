@@ -3,13 +3,13 @@ import React from 'react'
 export default function Page() {
   return (
     <section>
-      <header className="sectionHeader" data-reveal="up">
+      <header className="sectionHeader" data-reveal>
         <h1>Terms of Use</h1>
         <p>Placeholder terms for the early build stage. Before launch, replace this with your final terms text.</p>
       </header>
 
       <div className="stack" style={{ maxWidth: 980 }}>
-        <div className="panel" data-reveal="up">
+        <div className="panel" data-reveal data-reveal-delay="80">
           <h2 className="panelTitle">Use of the site</h2>
           <p className="panelText">
             Content is provided for informational and creative purposes. Do not misuse the site or attempt unauthorized
@@ -17,7 +17,7 @@ export default function Page() {
           </p>
         </div>
 
-        <div className="panel" data-reveal="up" data-reveal-delay="80">
+        <div className="panel" data-reveal data-reveal-delay="140">
           <h2 className="panelTitle">IP and brand assets</h2>
           <p className="panelText">
             The Neighborhood O.T.B. and related marks are protected. Use brand assets only according to the Brand Kit
@@ -28,7 +28,7 @@ export default function Page() {
           </p>
         </div>
 
-        <div className="panel" data-reveal="up" data-reveal-delay="160">
+        <div className="panel" data-reveal data-reveal-delay="200">
           <h2 className="panelTitle">Contact</h2>
           <p className="panelText" style={{ marginBottom: 0 }}>
             Questions? Use the <a className="linkInline" href="/contact">Contact</a> page.

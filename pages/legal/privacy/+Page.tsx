@@ -8,7 +8,7 @@ export default function Page() {
         <p>Placeholder policy for the early build stage. Before launch, replace this with your final policy text.</p>
       </header>
 
-      <div className="stack" style={{ maxWidth: 980 }}>
+      <div className="stack stackWide">
         <div className="panel" data-reveal data-reveal-delay="80">
           <h2 className="panelTitle">What we collect</h2>
           <p className="panelText">

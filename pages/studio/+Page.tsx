@@ -44,6 +44,21 @@ const PROCESS: { step: string; detail: string }[] = [
   { step: 'Ship', detail: 'Deploy, verify, monitor. Iterate with real feedback, not guesswork.' }
 ]
 
+const STUDIO_FAQ = [
+  {
+    q: 'What do you build?',
+    a: 'Brand systems, websites, product surfaces, and drop infrastructure built to scale.'
+  },
+  {
+    q: 'What are typical timelines?',
+    a: 'Most engagements run 2-8 weeks depending on scope, approvals, and content readiness.'
+  },
+  {
+    q: 'How do we start?',
+    a: 'Send a short brief and we will respond with a plan, timeline, and next steps.'
+  }
+]
+
 function CardGrid({ items }: { items: Card[] }) {
   return (
     <div className="gridAuto gridAuto240">
@@ -115,7 +130,7 @@ export default function Page() {
         </div>
       </header>
 
-      <section className="homeSection" style={{ marginTop: 18 }}>
+      <section className="homeSection">
         <header className="sectionHeader" data-reveal="up">
           <h2>
             What we build
@@ -128,7 +143,7 @@ export default function Page() {
         <CardGrid items={WHAT_WE_BUILD} />
       </section>
 
-      <section className="homeSection" style={{ marginTop: 26 }}>
+      <section className="homeSection">
         <header className="sectionHeader" data-reveal="up">
           <h2>
             Process
@@ -150,6 +165,32 @@ export default function Page() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="homeSection">
+        <header className="sectionHeader" data-reveal="up">
+          <h2>
+            Studio FAQ
+          </h2>
+          <p>
+            Quick answers for planning a project.
+          </p>
+        </header>
+
+        <div className="panelGrid" data-reveal>
+          {STUDIO_FAQ.map((item, i) => (
+            <div
+              key={item.q}
+              className="panel"
+              data-reveal
+              data-reveal-delay={String(80 + i * 60)}
+              data-reveal-variant="fast"
+            >
+              <h3 className="panelTitle">{item.q}</h3>
+              <p className="panelText">{item.a}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="homeSection" data-reveal="up" data-reveal-delay="120">

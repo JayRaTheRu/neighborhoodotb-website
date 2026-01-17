@@ -1,1 +1,1 @@
-export default 'Terms of Service — NeighborhoodOTB'
+export default 'Terms of Use - NeighborhoodOTB'

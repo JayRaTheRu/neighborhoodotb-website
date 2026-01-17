@@ -135,7 +135,7 @@ export default function Page() {
             {item.summary ? <p className="cardBody" style={{ marginTop: 8 }}>{item.summary}</p> : null}
 
             {item.tags && item.tags.length > 0 ? (
-              <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              <div className="metaRow">
                 {item.tags.slice(0, 6).map((t) => (
                   <span key={t} className="pill">
                     {t}

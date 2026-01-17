@@ -143,6 +143,27 @@ Rule: Oldest at top. Newest at bottom. Never edit old entries—only append new 
 
 ---
 
+# TASK 010 — 2026-01-16 — GA4 Google tag snippet + SPA pageviews
+
+## LOG/REPORT 010
+
+- Files changed:
+  - `pages/+Head.tsx`
+  - `pages/+Layout.tsx`
+  - `codex/HANDOFF.md`
+- What changed:
+  - Added the Google-provided gtag.js snippet to the global head so it loads once on every page.
+  - Kept SPA route-change tracking via manual `page_view` events (skips initial load to avoid duplicate counts).
+  - Removed Layout-side GA loader so the tag exists only once.
+- GA4 Realtime verification:
+  - Open GA4 → Realtime.
+  - Navigate Home → About/Studio → Content → Legal → Home.
+  - Confirm `page_view` events appear with correct `page_location`, `page_path`, and `page_title`.
+- Dev/build:
+  - NOT RUN (Mode A; user runs locally in WSL).
+
+---
+
 # TASK 009 — 2026-01-16 — GA4 analytics (free) + SPA pageviews (Vike)
 
 ## LOG/REPORT 009

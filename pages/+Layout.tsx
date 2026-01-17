@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { usePageContext } from 'vike-react/usePageContext'
 import '../src/styles/global.css'
 import { HeaderNav } from '../src/components/HeaderNav'
 import { Footer } from '../src/components/Footer'
@@ -6,7 +7,9 @@ import { Footer } from '../src/components/Footer'
 const REVEAL_BOUND_ATTR = 'data-reveal-bound'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const pageContext = usePageContext()
   const mainRef = useRef<HTMLElement | null>(null)
+  const hasTrackedRef = useRef(false)
 
   // Scroll progress bar
   useEffect(() => {
@@ -103,6 +106,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       observer?.disconnect()
     }
   }, [])
+
+  // GA4: manual pageviews on SPA route changes (skip initial load)
+  useEffect(() => {
+    if (!hasTrackedRef.current) {
+      hasTrackedRef.current = true
+      return
+    }
+    if (typeof window === 'undefined') return
+    const w = window as Window & { gtag?: (...args: any[]) => void }
+    if (typeof w.gtag !== 'function') return
+
+    w.gtag('event', 'page_view', {
+      page_location: window.location.href,
+      page_path: `${window.location.pathname}${window.location.search}`,
+      page_title: document.title
+    })
+  }, [pageContext.urlPathname])
 
   return (
     <div className="site">

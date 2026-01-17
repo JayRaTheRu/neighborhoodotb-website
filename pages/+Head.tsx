@@ -185,6 +185,18 @@ export function Head() {
 
   return (
     <>
+      {/* Google tag (gtag.js) */}
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKKL59HZSR" />
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            'window.dataLayer = window.dataLayer || [];\n' +
+            'function gtag(){dataLayer.push(arguments);}\n' +
+            "gtag('js', new Date());\n\n" +
+            "gtag('config', 'G-GKKL59HZSR');"
+        }}
+      />
+
       {/* Primary document metadata */}
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -192,6 +204,10 @@ export function Head() {
       <meta name="description" content={description} />
       <meta name="referrer" content="strict-origin-when-cross-origin" />
       <meta name="format-detection" content="telephone=no" />
+
+      {/* Font preconnect for faster first paint */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
       {/* Icons + manifest */}
       <link rel="icon" href="/favicon.ico" sizes="any" />

@@ -11,7 +11,7 @@ export default function Page() {
         </p>
       </header>
 
-      <div className="stack" style={{ maxWidth: 900 }}>
+      <div className="stack stackNarrow">
         <div className="panel" data-reveal data-reveal-delay="80">
           <h2 className="panelTitle">Physical</h2>
           <p className="panelText">Tangible products: prints, merch, packs, objects, limited runs.</p>

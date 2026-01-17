@@ -13,6 +13,21 @@ const MASTER_VALUES = [
   'Expression Over Perfection'
 ]
 
+const ABOUT_FAQ = [
+  {
+    q: 'What is NeighborhoodOTB?',
+    a: 'A culture house and creative studio building brand systems, products, tools, and drops with clear values.'
+  },
+  {
+    q: 'Who is it for?',
+    a: 'Founders, teams, and collaborators who care about craft, culture, and long-term systems.'
+  },
+  {
+    q: 'How do we start?',
+    a: 'Begin with Studio for project work or use Contact for collaborations and introductions.'
+  }
+]
+
 export default function Page() {
   return (
     <section>
@@ -24,7 +39,7 @@ export default function Page() {
         </p>
       </header>
 
-      <div className="stack" style={{ maxWidth: 980 }}>
+      <div className="stack stackWide">
         <div className="panel" data-reveal data-reveal-delay="80">
           <h2 className="panelTitle">Purpose</h2>
           <p className="panelText">
@@ -67,6 +82,28 @@ export default function Page() {
           </p>
         </div>
       </div>
+
+      <section className="homeSection">
+        <header className="sectionHeader" data-reveal>
+          <h2>Quick answers</h2>
+          <p>Short answers to the most common questions about the Neighborhood.</p>
+        </header>
+
+        <div className="panelGrid" data-reveal>
+          {ABOUT_FAQ.map((item, i) => (
+            <div
+              key={item.q}
+              className="panel"
+              data-reveal
+              data-reveal-delay={String(80 + i * 60)}
+              data-reveal-variant="fast"
+            >
+              <h3 className="panelTitle">{item.q}</h3>
+              <p className="panelText">{item.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
     </section>
   )
 }

@@ -21,6 +21,7 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
   const [consent, setConsent] = React.useState(false)
 
   const [status, setStatus] = React.useState<Status>({ type: 'idle' })
+  const isBusy = status.type === 'loading'
 
   // anti-spam
   const [company, setCompany] = React.useState('') // honeypot trap
@@ -108,15 +109,17 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
         <p className="dispatchSub">Drop alerts, experiments, and releases. No hype spam. Just signals.</p>
       </div>
 
-      <form onSubmit={onSubmit} className="dispatchForm">
+      <form onSubmit={onSubmit} className="dispatchForm" aria-busy={isBusy}>
         <div className="hp" aria-hidden="true">
           <label>
             Company
             <input
               value={company}
               onChange={(e) => setCompany(e.target.value)}
+              name="company"
               tabIndex={-1}
               autoComplete="off"
+              disabled={isBusy}
             />
           </label>
         </div>
@@ -126,11 +129,13 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            name="email"
             type="email"
             inputMode="email"
             autoComplete="email"
             placeholder="you@domain.com"
             required
+            disabled={isBusy}
           />
         </label>
 
@@ -139,19 +144,27 @@ export function DispatchModule({ source = 'neighborhoodotb.io' }: { source?: str
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
+            name="name"
             type="text"
             autoComplete="name"
             placeholder="First name"
+            disabled={isBusy}
           />
         </label>
 
         <label className="check">
-          <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            name="consent"
+            disabled={isBusy}
+          />
           <span>I agree to receive The Neighborhood Dispatch emails.</span>
         </label>
 
-        <button className="btn" disabled={status.type === 'loading' || inCooldown()} type="submit">
-          {status.type === 'loading' ? 'Joining…' : inCooldown() ? 'Hold…' : 'Join Dispatch'}
+        <button className="btn" disabled={isBusy || inCooldown()} type="submit">
+          {isBusy ? 'Joining…' : inCooldown() ? 'Hold…' : 'Join Dispatch'}
         </button>
 
         {status.type === 'success' ? (

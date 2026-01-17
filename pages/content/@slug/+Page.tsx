@@ -58,14 +58,14 @@ export default function Page() {
         <h1>{meta.title}</h1>
         {meta.summary ? <p>{meta.summary}</p> : null}
 
-        <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+        <div className="metaRow">
           <span className="pill">{typeLabel(meta)}</span>
           {meta.featured ? <span className="pill">Featured</span> : null}
           {meta.date ? <span className="controlsMeta">{formatDateYmd(meta.date)}</span> : null}
         </div>
 
         {meta.tags && meta.tags.length > 0 ? (
-          <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <div className="metaRow">
             {meta.tags.map((t) => (
               <span key={t} className="pill">
                 {t}

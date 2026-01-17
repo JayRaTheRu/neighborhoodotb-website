@@ -8,7 +8,7 @@ export default function Page() {
         <p>Placeholder terms for the early build stage. Before launch, replace this with your final terms text.</p>
       </header>
 
-      <div className="stack" style={{ maxWidth: 980 }}>
+      <div className="stack stackWide">
         <div className="panel" data-reveal data-reveal-delay="80">
           <h2 className="panelTitle">Use of the site</h2>
           <p className="panelText">

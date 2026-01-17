@@ -8,7 +8,7 @@ export default function Page() {
         <p>Policies and terms for using NeighborhoodOTB.io.</p>
       </header>
 
-      <div className="stack" style={{ maxWidth: 900 }}>
+      <div className="stack stackNarrow">
         <a
           className="card"
           href="/legal/privacy"

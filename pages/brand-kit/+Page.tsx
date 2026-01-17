@@ -11,7 +11,7 @@ export default function Page() {
         </p>
       </header>
 
-      <div className="stack" style={{ maxWidth: 980 }}>
+      <div className="stack stackWide">
         <div className="panel" data-reveal data-reveal-delay="80">
           <h2 className="panelTitle">Quick rules</h2>
 

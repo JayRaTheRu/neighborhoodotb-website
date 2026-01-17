@@ -7,6 +7,8 @@
   --muted: rgba(242, 242, 242, 0.72);
   --line: rgba(242, 242, 242, 0.12);
   --line-strong: rgba(242, 242, 242, 0.18);
+  --panel-bg: rgba(255, 255, 255, 0.02);
+  --panel-bg-hover: rgba(255, 255, 255, 0.03);
 
   /* Marigold */
   --accent: #f5a01f;
@@ -40,6 +42,8 @@ html { color-scheme: dark; }
 body {
   margin: 0;
   font-family: "Montserrat", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  font-size: 16px;
+  line-height: 1.6;
   background:
     radial-gradient(900px 500px at 8% -10%, rgba(245, 160, 31, 0.06), transparent 60%),
     radial-gradient(1100px 700px at 92% 0%, rgba(242, 242, 242, 0.05), transparent 55%),
@@ -56,7 +60,7 @@ body {
 /* Links */
 a { color: inherit; text-decoration: none; }
 
-/* Make ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œimportantÃƒÂ¢Ã¢â€šÂ¬Ã‚Â links feel deliberate: underline on intent */
+/* Make important links feel deliberate: underline on intent */
 .prose a,
 .cardCta,
 .featuredCta {
@@ -66,6 +70,13 @@ a { color: inherit; text-decoration: none; }
 }
 
 img { max-width: 100%; height: auto; display: block; }
+
+.prose img {
+  margin: 18px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.2);
+}
 
 /* Accessibility / motion */
 @media (prefers-reduced-motion: reduce) {
@@ -294,10 +305,29 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 /* Common section header */
-.sectionHeader { margin-bottom: 14px; }
+.sectionHeader {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+}
 
 .sectionHeader h1,
-.sectionHeader h2 { margin: 0 0 8px; }
+.sectionHeader h2 {
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.sectionHeader h1 {
+  font-size: clamp(30px, 3.6vw, 44px);
+  line-height: 1.05;
+  font-weight: 900;
+}
+
+.sectionHeader h2 {
+  font-size: clamp(22px, 2.6vw, 30px);
+  line-height: 1.15;
+  font-weight: 800;
+}
 
 .sectionHeader p {
   margin: 0;
@@ -309,10 +339,10 @@ img { max-width: 100%; height: auto; display: block; }
 /* Card system (base) */
 .card {
   display: block;
-  border: 1px solid rgba(242, 242, 242, 0.12);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--panel-bg);
   text-decoration: none;
   transition:
     transform var(--t-med) var(--ease),
@@ -322,11 +352,11 @@ img { max-width: 100%; height: auto; display: block; }
 
 .card:hover {
   border-color: rgba(245, 160, 31, 0.40);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--panel-bg-hover);
   transform: translateY(-2px);
 }
 
-.cardTitle { font-size: 16px; font-weight: 700; margin: 0 0 8px; }
+.cardTitle { font-size: 16px; font-weight: 700; margin: 0 0 8px; line-height: 1.25; }
 .cardBody  { font-size: 14px; color: rgba(242, 242, 242, 0.84); margin: 0 0 10px; line-height: 1.6; }
 .cardMeta  { font-size: 12px; color: var(--muted); opacity: 0.9; }
 
@@ -460,10 +490,10 @@ input, textarea, select { font: inherit; }
 /* Dispatch module */
 .dispatch {
   margin-top: 42px;
-  border: 1px solid rgba(242, 242, 242, 0.12);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 18px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--panel-bg);
 }
 
 .dispatchHeader { margin-bottom: 12px; }
@@ -566,7 +596,7 @@ input, textarea, select { font: inherit; }
   flex-wrap: wrap;
 }
 
-.homeSection { margin-top: 34px; }
+.homeSection { margin-top: 36px; }
 
 /* Map */
 .mapGrid {
@@ -609,9 +639,9 @@ input, textarea, select { font: inherit; }
   margin-top: 14px;
   padding: 18px;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(242, 242, 242, 0.14);
+  border: 1px solid var(--line);
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--panel-bg);
   transition:
     transform var(--t-med) var(--ease),
     border-color var(--t-fast) var(--ease),
@@ -620,7 +650,7 @@ input, textarea, select { font: inherit; }
 
 .featured:hover {
   border-color: rgba(245, 160, 31, 0.45);
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--panel-bg-hover);
   transform: translateY(-2px);
 }
 
@@ -657,27 +687,32 @@ input, textarea, select { font: inherit; }
 /* Vertical rhythm helpers */
 .stack {
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
+
+.stackNarrow { max-width: 900px; width: 100%; }
+.stackWide { max-width: 980px; width: 100%; }
 
 /* Editorial panels (replaces repeated inline border/radius/padding boxes) */
 .panel {
-  border: 1px solid rgba(242, 242, 242, 0.12);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: 18px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--panel-bg);
   transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
 }
 
 .panel:hover {
   border-color: rgba(245, 160, 31, 0.28);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--panel-bg-hover);
 }
 
 .panelTitle {
   margin: 0 0 10px;
   font-weight: 900;
   letter-spacing: 0.01em;
+  font-size: 18px;
+  line-height: 1.2;
 }
 
 .panelText {
@@ -745,7 +780,7 @@ input, textarea, select { font: inherit; }
 
 /* Inset panels (for nested "Do / Don't" blocks, etc.) */
 .panelInset {
-  border: 1px solid rgba(242, 242, 242, 0.12);
+  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 12px;
   background: rgba(0, 0, 0, 0.18);
@@ -786,12 +821,6 @@ input, textarea, select { font: inherit; }
   line-height: 1.7;
 }
 
-/* Tokenized lines (reduce hardcoded rgba drift) */
-:root {
-  --panel-bg: rgba(255, 255, 255, 0.02);
-  --panel-bg-hover: rgba(255, 255, 255, 0.03);
-}
-
 /* Inline underlined link utility (for legal pages, etc.) */
 .linkInline {
   text-decoration: underline;
@@ -817,6 +846,14 @@ input, textarea, select { font: inherit; }
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .controlsMeta {
@@ -854,7 +891,7 @@ input, textarea, select { font: inherit; }
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: rgba(0, 0, 0, 0.18);
+  background: var(--panel-bg);
   transition: border-color var(--t-fast) var(--ease), transform var(--t-med) var(--ease);
 }
 .panelNavCard:hover {
@@ -868,7 +905,7 @@ input, textarea, select { font: inherit; }
   margin-bottom: 8px;
 }
 
-/* Button variant for ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œaccent-outlineÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CTAs (FUDkers external link, etc.) */
+/* Button variant for accent-outline CTAs (FUDkers external link, etc.) */
 .btnAccent {
   border: 1px solid rgba(245, 160, 31, 0.55);
   background: rgba(245, 160, 31, 0.06);
@@ -885,12 +922,10 @@ input, textarea, select { font: inherit; }
 [data-reveal] {
   opacity: 0;
   transform: translateY(10px);
-  filter: blur(0.2px);
   transition:
     opacity var(--t-med) var(--ease),
-    transform var(--t-med) var(--ease),
-    filter var(--t-med) var(--ease);
-  will-change: opacity, transform, filter;
+    transform var(--t-med) var(--ease);
+  will-change: opacity, transform;
 }
 
 [data-reveal="fade"] {
@@ -920,7 +955,6 @@ input, textarea, select { font: inherit; }
 [data-reveal].is-inview {
   opacity: 1;
   transform: none;
-  filter: none;
 }
 
 /* Ensure content never gets stuck invisible for reduced-motion users */

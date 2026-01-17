@@ -8,7 +8,7 @@ export default function Page() {
         <p>Tools + Arcade. The Lab is where utility meets play: public tools, interactive experiments, and games.</p>
       </header>
 
-      <div className="stack" style={{ maxWidth: 900 }}>
+      <div className="stack stackNarrow">
         <div className="panel" data-reveal data-reveal-delay="80">
           <h2 className="panelTitle">Tools</h2>
           <p className="panelText">Public utilities, calculators, generators, and mini-apps built by OTB Studio.</p>

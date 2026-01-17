@@ -68,6 +68,7 @@ This repo uses a two-file workflow under `/codex`:
 
 1. `codex/HANDOFF.md` = CURRENT TASK ONLY
    - Contains only the instructions for the current task.
+   - Always append new tasks at the bottom of codex/LOG.md; do not reorder existing entries.
    - This file is reset/cleared after the task is completed.
 
 2. `codex/LOG.md` = APPEND-ONLY HISTORY
